@@ -29,6 +29,7 @@ import org.springframework.core.annotation.AliasFor;
 /**
  * Annotation indicating that the result of invoking a method (or all methods
  * in a class) can be cached.
+ * 该注解表示调用方法的返回结果（或该类的所有方法）可以被缓存
  *
  * <p>Each time an advised method is invoked, caching behavior will be applied,
  * checking whether the method has been already invoked for the given arguments.
@@ -36,14 +37,21 @@ import org.springframework.core.annotation.AliasFor;
  * a SpEL expression can be provided via the {@link #key} attribute, or a custom
  * {@link org.springframework.cache.interceptor.KeyGenerator} implementation can
  * replace the default one (see {@link #keyGenerator}).
+ * 每次调用被该注解增强的方法，将会应用缓存操作，检查该方法是否已以所给参数调用，默认情况下
+ * 用所给参数简单地生成缓存的key，或者通过{@link #key}提供一个SpEL表达式，再或者通过自定义
+ * 的{@link org.springframework.cache.interceptor.KeyGenerator}实现类来替换默认的实现类
+ * (参照 {@link #keyGenerator})。
  *
  * <p>If no value is found in the cache for the computed key, the target method
  * will be invoked and the returned value stored in the associated cache. Note
  * that Java8's {@code Optional} return types are automatically handled and its
  * content is stored in the cache if present.
+ * 如果该key没有对应的value，目标方法将会被调用，并且把返回值存储在对应的缓存中。注意Java8中的
+ * {@code Optional}返回类型将会被自动处理，并且内容存储在缓存中（如果存在）。
  *
  * <p>This annotation may be used as a <em>meta-annotation</em> to create custom
  * <em>composed annotations</em> with attribute overrides.
+ * 该注释可以被用作自定义组合注释的源注释。
  *
  * @author Costin Leau
  * @author Phillip Webb
@@ -60,6 +68,7 @@ public @interface Cacheable {
 
 	/**
 	 * Alias for {@link #cacheNames}.
+	 * {@link #cacheNames}的别名。
 	 */
 	@AliasFor("cacheNames")
 	String[] value() default {};
@@ -68,6 +77,7 @@ public @interface Cacheable {
 	 * Names of the caches in which method invocation results are stored.
 	 * <p>Names may be used to determine the target cache (or caches), matching
 	 * the qualifier value or bean name of a specific bean definition.
+	 * 方法返回值所存储的缓存名。缓存名将用于决定目标缓存，匹配特定的bean定义或者bean名称。
 	 * @since 4.2
 	 * @see #value
 	 * @see CacheConfig#cacheNames
@@ -79,6 +89,8 @@ public @interface Cacheable {
 	 * Spring Expression Language (SpEL) expression for computing the key dynamically.
 	 * <p>Default is {@code ""}, meaning all method parameters are considered as a key,
 	 * unless a custom {@link #keyGenerator} has been configured.
+	 * SqEL表达式用于动态计算缓存key值。
+	 * 默认为""，在没有配置自定义{@link #keyGenerator}得情况下表示所有方法参数都会被用来做key计算。
 	 * <p>The SpEL expression evaluates against a dedicated context that provides the
 	 * following meta-data:
 	 * <ul>
