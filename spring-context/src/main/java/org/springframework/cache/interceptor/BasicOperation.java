@@ -19,7 +19,7 @@ package org.springframework.cache.interceptor;
 import java.util.Set;
 
 /**
- * The base interface that all cache operations must implement.
+ * 所有缓存操作cache operations必须实现的底层接口。
  *
  * @author Stephane Nicoll
  * @since 4.1
@@ -27,7 +27,7 @@ import java.util.Set;
 public interface BasicOperation {
 
 	/**
-	 * Return the cache name(s) associated with the operation.
+	 * 返回操作相关的cache name。
 	 */
 	Set<String> getCacheNames();
 

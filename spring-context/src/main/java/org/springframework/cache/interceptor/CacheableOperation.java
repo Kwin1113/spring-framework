@@ -19,7 +19,8 @@ package org.springframework.cache.interceptor;
 import org.springframework.lang.Nullable;
 
 /**
- * Class describing a cache 'cacheable' operation.
+ * 声明类可缓存'cacheable'操作的类。
+ * 和 {@link CacheOperation} 相比多了unless和sync选项。
  *
  * @author Costin Leau
  * @author Phillip Webb
@@ -35,7 +36,8 @@ public class CacheableOperation extends CacheOperation {
 
 
 	/**
-	 * Create a new {@link CacheableOperation} instance from the given builder.
+	 * 通过给定的builder创建一个新的 {@link CacheableOperation} 实例。
+	 *
 	 * @since 4.3
 	 */
 	public CacheableOperation(CacheableOperation.Builder b) {
@@ -56,7 +58,8 @@ public class CacheableOperation extends CacheOperation {
 
 
 	/**
-	 * A builder that can be used to create a {@link CacheableOperation}.
+	 * 用于创建 {@link CacheableOperation} 的builder。
+	 *
 	 * @since 4.3
 	 */
 	public static class Builder extends CacheOperation.Builder {

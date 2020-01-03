@@ -16,15 +16,16 @@
 
 package org.springframework.cache.interceptor;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-
 /**
- * Base class for cache operations.
+ * 缓存操作的基类（配置类）。
+ * 所谓的metadata attribute class。
  *
  * @author Costin Leau
  * @author Stephane Nicoll
@@ -51,7 +52,8 @@ public abstract class CacheOperation implements BasicOperation {
 
 
 	/**
-	 * Create a new {@link CacheOperation} instance from the given builder.
+	 * 通过所给builder创建一个 {@link CacheOperation} 实例。
+	 *
 	 * @since 4.3
 	 */
 	protected CacheOperation(Builder b) {
@@ -97,7 +99,8 @@ public abstract class CacheOperation implements BasicOperation {
 
 
 	/**
-	 * This implementation compares the {@code toString()} results.
+	 * 该重写方法用于对比 {@code toString()} 的结果。
+	 *
 	 * @see #toString()
 	 */
 	@Override
@@ -106,7 +109,8 @@ public abstract class CacheOperation implements BasicOperation {
 	}
 
 	/**
-	 * This implementation returns {@code toString()}'s hash code.
+	 * 该重写方法用于对比 {@code toString()} 的hash code。
+	 *
 	 * @see #toString()
 	 */
 	@Override
@@ -115,10 +119,10 @@ public abstract class CacheOperation implements BasicOperation {
 	}
 
 	/**
-	 * Return an identifying description for this cache operation.
-	 * <p>Returned value is produced by calling {@link Builder#getOperationDescription()}
-	 * during object construction. This method is used in {@link #hashCode} and
-	 * {@link #equals}.
+	 * 返回该cache operation的识别描述。
+	 * 返回值是通过对象构造过程中调用 {@link Builder#getOperationDescription()}生成的。
+	 * 方法被用于 {@link #hashCode} 和 {@link #equals} 。
+	 *
 	 * @see Builder#getOperationDescription()
 	 */
 	@Override
@@ -128,7 +132,8 @@ public abstract class CacheOperation implements BasicOperation {
 
 
 	/**
-	 * Base class for builders that can be used to create a {@link CacheOperation}.
+	 * 用于创建 {@link CacheOperation} 的builder基类。
+	 *
 	 * @since 4.3
 	 */
 	public abstract static class Builder {
@@ -211,8 +216,8 @@ public abstract class CacheOperation implements BasicOperation {
 		}
 
 		/**
-		 * Return an identifying description for this caching operation.
-		 * <p>Available to subclasses, for inclusion in their {@code toString()} result.
+		 * 返回该caching operation的特有描述。
+		 * 能被子类获取，列入他们的 {@code toString()} 结果中。
 		 */
 		protected StringBuilder getOperationDescription() {
 			StringBuilder result = new StringBuilder(getClass().getSimpleName());

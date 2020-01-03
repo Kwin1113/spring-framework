@@ -16,18 +16,12 @@
 
 package org.springframework.cache.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * {@code @CacheConfig} provides a mechanism for sharing common cache-related
- * settings at the class level.
- *
- * <p>When this annotation is present on a given class, it provides a set
- * of default settings for any cache operation defined in that class.
+ * {@code @CacheConfig} 提供了一种在类级别共享常见的缓存相关设置的机制。
+ * <p>
+ * 当此注解出现在给定的类上时，它将为该类中定义的任何缓存操作提供一组默认设置。
  *
  * @author Stephane Nicoll
  * @author Sam Brannen
@@ -39,37 +33,38 @@ import java.lang.annotation.Target;
 public @interface CacheConfig {
 
 	/**
-	 * Names of the default caches to consider for caching operations defined
-	 * in the annotated class.
-	 * <p>If none is set at the operation level, these are used instead of the default.
-	 * <p>May be used to determine the target cache (or caches), matching the
-	 * qualifier value or the bean names of a specific bean definition.
+	 * 定义在被注解类上的默认缓存名称，用于缓存操作。
+	 * <p>
+	 * 如果在操作级别未设置任何值，则将使用这些值而不是默认值。
+	 * 可用于指定目标缓存，匹配指定值或特定bean定义的bean名称。
 	 */
 	String[] cacheNames() default {};
 
 	/**
-	 * The bean name of the default {@link org.springframework.cache.interceptor.KeyGenerator} to
-	 * use for the class.
-	 * <p>If none is set at the operation level, this one is used instead of the default.
-	 * <p>The key generator is mutually exclusive with the use of a custom key. When such key is
-	 * defined for the operation, the value of this key generator is ignored.
+	 * 默认 {@link org.springframework.cache.interceptor.KeyGenerator} 的bean名称。
+	 * <p>
+	 * 如果在操作级别未设置任何值，则将使用这些值而不是默认值。
+	 * key generator和自定义key值互斥。
+	 * 如果指定了key值，keyGenerator将会被忽略。
 	 */
 	String keyGenerator() default "";
 
 	/**
-	 * The bean name of the custom {@link org.springframework.cache.CacheManager} to use to
-	 * create a default {@link org.springframework.cache.interceptor.CacheResolver} if none
-	 * is set already.
-	 * <p>If no resolver and no cache manager are set at the operation level, and no cache
-	 * resolver is set via {@link #cacheResolver}, this one is used instead of the default.
+	 * 自定义 {@link org.springframework.cache.CacheManager} 的bean名称，如果未指定将创建默认的
+	 * {@link org.springframework.cache.interceptor.CacheResolver}。
+	 * <p>
+	 * 如果在操作级别没有设置resolver或cache manager，如果没有通过 {@link #cacheResolver} 指定cache resolver，
+	 * 将会用这个代替默认。
+	 *
 	 * @see org.springframework.cache.interceptor.SimpleCacheResolver
 	 */
 	String cacheManager() default "";
 
 	/**
-	 * The bean name of the custom {@link org.springframework.cache.interceptor.CacheResolver} to use.
-	 * <p>If no resolver and no cache manager are set at the operation level, this one is used
-	 * instead of the default.
+	 * 自定义 {@link org.springframework.cache.interceptor.CacheResolver} 的名称。
+	 * <p>
+	 * 如果在操作级别没有设置resolver或cache manager，如果没有通过 {@link #cacheResolver} 指定cache resolver，
+	 * 将会用这个代替默认。
 	 */
 	String cacheResolver() default "";
 
