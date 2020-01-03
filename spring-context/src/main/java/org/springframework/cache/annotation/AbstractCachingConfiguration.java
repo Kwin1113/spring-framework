@@ -32,8 +32,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Abstract base {@code @Configuration} class providing common structure
- * for enabling Spring's annotation-driven cache management capability.
+ * 配置的抽象实现类{@code @Configuration}，配置支持Spring注解驱动的缓存管理的通用结构。
  *
  * @author Chris Beams
  * @author Stephane Nicoll
@@ -86,7 +85,7 @@ public abstract class AbstractCachingConfiguration implements ImportAware {
 	}
 
 	/**
-	 * Extract the configuration from the nominated {@link CachingConfigurer}.
+	 * 从指定的 {@link CachingConfigurer} 中提取配置。
 	 */
 	protected void useCachingConfigurer(CachingConfigurer config) {
 		this.cacheManager = config::cacheManager;

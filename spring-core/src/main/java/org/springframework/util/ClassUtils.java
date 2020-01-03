@@ -1296,8 +1296,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
-	 * Determine whether the given method is declared by the user or at least pointing to
-	 * a user-declared method.
+	 * 确定该方法是否是用户声明的或者指向用户声明的方法。
 	 * <p>Checks {@link Method#isSynthetic()} (for implementation methods) as well as the
 	 * {@code GroovyObject} interface (for interface methods; on an implementation class,
 	 * implementations of the {@code GroovyObject} methods will be marked as synthetic anyway).

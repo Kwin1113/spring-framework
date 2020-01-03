@@ -177,11 +177,10 @@ public abstract class AopUtils {
 	}
 
 	/**
-	 * Given a method, which may come from an interface, and a target class used
-	 * in the current AOP invocation, find the corresponding target method if there
-	 * is one. E.g. the method may be {@code IFoo.bar()} and the target class
-	 * may be {@code DefaultFoo}. In this case, the method may be
-	 * {@code DefaultFoo.bar()}. This enables attributes on that method to be found.
+	 * 给定一个（接口）方法和当前AOP调用的目标类，获得目标方法（如果存在的话）。
+	 * 例如给定方法{@code IFoo.bar()}和目标类{@code DefaultFoo}。
+	 * 返回方法应该为{@code DefaultFoo.bar()}。该方法支持获取方法上的属性。
+	 *
 	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.util.ClassUtils#getMostSpecificMethod},
 	 * this method resolves Java 5 bridge methods in order to retrieve attributes
 	 * from the <i>original</i> method definition.

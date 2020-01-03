@@ -16,16 +16,14 @@
 
 package org.springframework.cache.interceptor;
 
+import org.springframework.lang.Nullable;
+
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-import org.springframework.lang.Nullable;
-
 /**
- * {@link CacheInterceptor} 的接口。实现类需要
- * Interface used by {@link CacheInterceptor}. Implementations know how to source
- * cache operation attributes, whether from configuration, metadata attributes at
- * source level, or elsewhere.
+ * {@link CacheInterceptor} 的接口。实现类需要实现缓存操作属性的配置，可能来自配置、资源级别的
+ * 元数据属性或其他地方。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
@@ -34,17 +32,16 @@ import org.springframework.lang.Nullable;
 public interface CacheOperationSource {
 
 	/**
-	 * Determine whether the given class is a candidate for cache operations
-	 * in the metadata format of this {@code CacheOperationSource}.
-	 * <p>If this method returns {@code false}, the methods on the given class
-	 * will not get traversed for {@link #getCacheOperations} introspection.
-	 * Returning {@code false} is therefore an optimization for non-affected
-	 * classes, whereas {@code true} simply means that the class needs to get
-	 * fully introspected for each method on the given class individually.
-	 * @param targetClass the class to introspect
-	 * @return {@code false} if the class is known to have no cache operation
-	 * metadata at class or method level; {@code true} otherwise. The default
-	 * implementation returns {@code true}, leading to regular introspection.
+	 * 确定在 {@code CacheOperationSource} 的元数据格式下，所给类是否为缓存操作类的潜在类。
+	 * 如果该方法返回{@code false}，所给类的方法不会被 {@link #getCacheOperations} 检查
+	 * 时遍历到。因此返回{@code false}是对无影响类的优化，然后返回{@code true}仅仅代表该类
+	 * 上的每个方法都需要被充分的检查。
+	 *
+	 * @param targetClass 自检目标类
+	 * @return 如果所给类在类级别或方法级别没有缓存操作元数据 cache operation metadata
+	 * 则返回 {@code false};
+	 * 否则返回 {@code true}。
+	 * 默认实现类返回{@code true}，检查所有类和方法。
 	 * @since 5.2
 	 */
 	default boolean isCandidateClass(Class<?> targetClass) {
@@ -52,12 +49,12 @@ public interface CacheOperationSource {
 	}
 
 	/**
-	 * Return the collection of cache operations for this method,
-	 * or {@code null} if the method contains no <em>cacheable</em> annotations.
-	 * @param method the method to introspect
-	 * @param targetClass the target class (may be {@code null}, in which case
-	 * the declaring class of the method must be used)
-	 * @return all cache operations for this method, or {@code null} if none found
+	 * 返回该方法的缓存操作集合，如果方法上没有cacheable注解（并不只是{@link org.springframework.cache.annotation.Cacheable}),
+	 * 返回{@code null}。
+	 *
+	 * @param method      检查的目标方法
+	 * @param targetClass 目标类（可以为空{@code null}，此时目标类为方法所在类）
+	 * @return 该方法的所有缓存操作集合，不存在时返回{@code null}
 	 */
 	@Nullable
 	Collection<CacheOperation> getCacheOperations(Method method, @Nullable Class<?> targetClass);

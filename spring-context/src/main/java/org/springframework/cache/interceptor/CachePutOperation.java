@@ -19,7 +19,8 @@ package org.springframework.cache.interceptor;
 import org.springframework.lang.Nullable;
 
 /**
- * Class describing a cache 'put' operation.
+ * 声明类可缓存'put'操作的类.
+ * 和 {@link CacheOperation} 相比多了unless选项。
  *
  * @author Costin Leau
  * @author Phillip Webb
@@ -33,7 +34,8 @@ public class CachePutOperation extends CacheOperation {
 
 
 	/**
-	 * Create a new {@link CachePutOperation} instance from the given builder.
+	 * 通过给定的builder创建 {@link CachePutOperation} 实例。
+	 *
 	 * @since 4.3
 	 */
 	public CachePutOperation(CachePutOperation.Builder b) {
@@ -49,7 +51,8 @@ public class CachePutOperation extends CacheOperation {
 
 
 	/**
-	 * A builder that can be used to create a {@link CachePutOperation}.
+	 * 创建 {@link CachePutOperation} 的builder。
+	 *
 	 * @since 4.3
 	 */
 	public static class Builder extends CacheOperation.Builder {

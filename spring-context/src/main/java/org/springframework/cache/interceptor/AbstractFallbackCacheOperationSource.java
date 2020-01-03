@@ -16,6 +16,13 @@
 
 package org.springframework.cache.interceptor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.aop.support.AopUtils;
+import org.springframework.core.MethodClassKey;
+import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -23,28 +30,19 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.aop.support.AopUtils;
-import org.springframework.core.MethodClassKey;
-import org.springframework.lang.Nullable;
-import org.springframework.util.ClassUtils;
-
 /**
- * Abstract implementation of {@link CacheOperation} that caches attributes
- * for methods and implements a fallback policy: 1. specific target method;
- * 2. target class; 3. declaring method; 4. declaring class/interface.
- *
- * <p>Defaults to using the target class's caching attribute if none is
- * associated with the target method. Any caching attribute associated with
- * the target method completely overrides a class caching attribute.
- * If none found on the target class, the interface that the invoked method
- * has been called through (in case of a JDK proxy) will be checked.
- *
- * <p>This implementation caches attributes by method after they are first
- * used. If it is ever desirable to allow dynamic changing of cacheable
- * attributes (which is very unlikely), caching could be made configurable.
+ * 缓存方法缓存相关属性 {@link CacheOperation} 的抽象实现类，实现了fallback策略：
+ * 1. 特定目标方法；
+ * 2. 特定类；
+ * 3. 声明方法；
+ * 4. 声明类/接口；
+ * <p>
+ * 如果目标方法没有相关的缓存配置，默认使用目标类的缓存配置。目标方法上的缓存属性配置将会
+ * 重载目标类上的相同属性。如果在目标类上也没有找到缓存配置，则会去调用该方法的接口上获取
+ * （如果是JDK代理实现的话）。
+ * <p>
+ * 该实现类将在属性第一次被使用之后进行缓存操作。如果想要动态更改缓存属性（不太可能），
+ * 可以使缓存可配置。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
@@ -53,34 +51,32 @@ import org.springframework.util.ClassUtils;
 public abstract class AbstractFallbackCacheOperationSource implements CacheOperationSource {
 
 	/**
-	 * Canonical value held in cache to indicate no caching attribute was
-	 * found for this method and we don't need to look again.
+	 * 空缓存
+	 * 没有任何缓存配置的方法对应的规范值（空列表），之后无需检查。
 	 */
 	private static final Collection<CacheOperation> NULL_CACHING_ATTRIBUTE = Collections.emptyList();
 
 
 	/**
-	 * Logger available to subclasses.
-	 * <p>As this base class is not marked Serializable, the logger will be recreated
-	 * after serialization - provided that the concrete subclass is Serializable.
+	 * 子类可用的Logger。
+	 * 基类没有实现Serializable标记接口，因此具体子类要是Serializable的，在序列化之后会重新生成logger。
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * Cache of CacheOperations, keyed by method on a specific target class.
-	 * <p>As this base class is not marked Serializable, the cache will be recreated
-	 * after serialization - provided that the concrete subclass is Serializable.
+	 * CacheOperation的缓存，由特定目标类的方法指定key。
+	 * 基类没有实现Serializable标记接口，因此具体子类要是Serializable的，在序列化之后会重新生成logger。
 	 */
 	private final Map<Object, Collection<CacheOperation>> attributeCache = new ConcurrentHashMap<>(1024);
 
 
 	/**
-	 * Determine the caching attribute for this method invocation.
-	 * <p>Defaults to the class's caching attribute if no method attribute is found.
-	 * @param method the method for the current invocation (never {@code null})
-	 * @param targetClass the target class for this invocation (may be {@code null})
-	 * @return {@link CacheOperation} for this method, or {@code null} if the method
-	 * is not cacheable
+	 * 确定该方法调用的缓存属性。
+	 * 方法上未获得属性时，使用所在类上的属性。
+	 *
+	 * @param method      当前调用的方法 (永不为 {@code null})
+	 * @param targetClass 当前调用的目标类 (可能为 {@code null})
+	 * @return 当前方法的 {@link CacheOperation} , 如果方法不能缓存则返回 {@code null}
 	 */
 	@Override
 	@Nullable
@@ -89,21 +85,22 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 			return null;
 		}
 
+		//先通过所给方法获得缓存的key值
 		Object cacheKey = getCacheKey(method, targetClass);
+		//在已有缓存里看看有没有已经被缓存
 		Collection<CacheOperation> cached = this.attributeCache.get(cacheKey);
 
 		if (cached != null) {
+			//如果有缓存，则查看是不是空缓存，是的话返回null，不是返回该缓存。
 			return (cached != NULL_CACHING_ATTRIBUTE ? cached : null);
-		}
-		else {
+		} else {
 			Collection<CacheOperation> cacheOps = computeCacheOperations(method, targetClass);
 			if (cacheOps != null) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Adding cacheable method '" + method.getName() + "' with attribute: " + cacheOps);
 				}
 				this.attributeCache.put(cacheKey, cacheOps);
-			}
-			else {
+			} else {
 				this.attributeCache.put(cacheKey, NULL_CACHING_ATTRIBUTE);
 			}
 			return cacheOps;
@@ -111,12 +108,13 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 	}
 
 	/**
-	 * Determine a cache key for the given method and target class.
-	 * <p>Must not produce same key for overloaded methods.
-	 * Must produce same key for different instances of the same method.
-	 * @param method the method (never {@code null})
-	 * @param targetClass the target class (may be {@code null})
-	 * @return the cache key (never {@code null})
+	 * 通过所给方法和目标类确定缓存key。
+	 * 重载的方法不能生成相同的key。
+	 * 不同实例的相同方法必须生成相同的key。
+	 *
+	 * @param method      所给方法 (永不为 {@code null})
+	 * @param targetClass 目标类 (可能为 {@code null})
+	 * @return 缓存key值 (永不为 {@code null})
 	 */
 	protected Object getCacheKey(Method method, @Nullable Class<?> targetClass) {
 		return new MethodClassKey(method, targetClass);
@@ -124,34 +122,34 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 
 	@Nullable
 	private Collection<CacheOperation> computeCacheOperations(Method method, @Nullable Class<?> targetClass) {
-		// Don't allow no-public methods as required.
+		// 非public方法不能缓存
 		if (allowPublicMethodsOnly() && !Modifier.isPublic(method.getModifiers())) {
 			return null;
 		}
 
-		// The method may be on an interface, but we need attributes from the target class.
-		// If the target class is null, the method will be unchanged.
+		// 方法可能是接口调用，但我们需要从目标类上获取属性。
+		// 如果目标类为空null，方法将保持不变。  ？？？
 		Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);
 
-		// First try is the method in the target class.
+		// 首先尝试在目标类的方法上获取缓存操作
 		Collection<CacheOperation> opDef = findCacheOperations(specificMethod);
 		if (opDef != null) {
 			return opDef;
 		}
 
-		// Second try is the caching operation on the target class.
+		// 再尝试在目标类上获取缓存操作
 		opDef = findCacheOperations(specificMethod.getDeclaringClass());
 		if (opDef != null && ClassUtils.isUserLevelMethod(method)) {
 			return opDef;
 		}
 
 		if (specificMethod != method) {
-			// Fallback is to look at the original method.
+			// 还是没获取到属性，则fallback，从原始方法上找。
 			opDef = findCacheOperations(method);
 			if (opDef != null) {
 				return opDef;
 			}
-			// Last fallback is the class of the original method.
+			// 还是没找到，则从原始数据的目标类上找。
 			opDef = findCacheOperations(method.getDeclaringClass());
 			if (opDef != null && ClassUtils.isUserLevelMethod(method)) {
 				return opDef;
@@ -163,26 +161,26 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 
 
 	/**
-	 * Subclasses need to implement this to return the caching attribute for the
-	 * given class, if any.
-	 * @param clazz the class to retrieve the attribute for
-	 * @return all caching attribute associated with this class, or {@code null} if none
+	 * 子类需要实现该方法，返回所给类的缓存属性（如果有的话）
+	 *
+	 * @param clazz 从该类上获取属性
+	 * @return 该类对应的所有缓存操作，如果没有的话返回空 {@code null}
 	 */
 	@Nullable
 	protected abstract Collection<CacheOperation> findCacheOperations(Class<?> clazz);
 
 	/**
-	 * Subclasses need to implement this to return the caching attribute for the
-	 * given method, if any.
-	 * @param method the method to retrieve the attribute for
-	 * @return all caching attribute associated with this method, or {@code null} if none
+	 * 子类需要实现该方法，返回所给方法的缓存属性（如果有的话）
+	 *
+	 * @param method 从该方法上获取属性
+	 * @return 该方法对应的所有缓存操作，如果没有的话返回空 {@code null}
 	 */
 	@Nullable
 	protected abstract Collection<CacheOperation> findCacheOperations(Method method);
 
 	/**
-	 * Should only public methods be allowed to have caching semantics?
-	 * <p>The default implementation returns {@code false}.
+	 * 返回是否只有public方法允许缓存语义。
+	 * 默认实现返回{@code false}
 	 */
 	protected boolean allowPublicMethodsOnly() {
 		return false;

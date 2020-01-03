@@ -20,10 +20,8 @@ import org.springframework.beans.factory.Aware;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * Interface to be implemented by any @{@link Configuration} class that wishes
- * to be injected with the {@link AnnotationMetadata} of the @{@code Configuration}
- * class that imported it. Useful in conjunction with annotations that
- * use @{@link Import} as a meta-annotation.
+ * 所有想要通过导入的配置类{@code Configuration}的注解元数据 {@link AnnotationMetadata} 注入
+ * 的配置类需要实现的接口。在和以{@link Import}为元注解的注解中非常有用。
  *
  * @author Chris Beams
  * @since 3.1
@@ -31,7 +29,7 @@ import org.springframework.core.type.AnnotationMetadata;
 public interface ImportAware extends Aware {
 
 	/**
-	 * Set the annotation metadata of the importing @{@code Configuration} class.
+	 * 设置 @{@code Configuration} 类的注解元数据
 	 */
 	void setImportMetadata(AnnotationMetadata importMetadata);
 
