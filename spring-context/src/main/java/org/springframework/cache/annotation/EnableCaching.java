@@ -16,34 +16,28 @@
 
 package org.springframework.cache.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 
+import java.lang.annotation.*;
+
 /**
- * Enables Spring's annotation-driven cache management capability, similar to the
- * support found in Spring's {@code <cache:*>} XML namespace. To be used together
- * with @{@link org.springframework.context.annotation.Configuration Configuration}
- * classes as follows:
- *
+ * 开启Spring的注解驱动功能，类似Spring XML命名空间的配置。
+ * 配合@{@link org.springframework.context.annotation.Configuration Configuration}一起使用：
+ * 
  * <pre class="code">
- * &#064;Configuration
- * &#064;EnableCaching
+ * @ Configuration
+ * @ EnableCaching
  * public class AppConfig {
  *
- *     &#064;Bean
+ *     @ Bean
  *     public MyService myService() {
- *         // configure and return a class having &#064;Cacheable methods
+ *         // configure and return a class having @ Cacheable methods
  *         return new MyService();
  *     }
  *
- *     &#064;Bean
+ *     @ Bean
  *     public CacheManager cacheManager() {
  *         // configure and return an implementation of Spring's CacheManager SPI
  *         SimpleCacheManager cacheManager = new SimpleCacheManager();
@@ -52,67 +46,60 @@ import org.springframework.core.Ordered;
  *     }
  * }</pre>
  *
- * <p>For reference, the example above can be compared to the following Spring XML
- * configuration:
+ * 和以下Spring XML配置文件相比：
  *
  * <pre class="code">
- * &lt;beans&gt;
+ * < beans>
  *
- *     &lt;cache:annotation-driven/&gt;
+ *     < cache:annotation-driven/>;
  *
- *     &lt;bean id="myService" class="com.foo.MyService"/&gt;
+ *     < bean id="myService" class="com.foo.MyService"/>;
  *
- *     &lt;bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager"&gt;
- *         &lt;property name="caches"&gt;
- *             &lt;set&gt;
- *                 &lt;bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"&gt;
- *                     &lt;property name="name" value="default"/&gt;
- *                 &lt;/bean&gt;
- *             &lt;/set&gt;
- *         &lt;/property&gt;
- *     &lt;/bean&gt;
+ *     < bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+ *         < property name="caches">
+ *             < set>
+ *                 < bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+ *                     < property name="name" value="default"/>
+ *                 < /bean>
+ *             < /set>
+ *         < /property>
+ *     < /bean>
  *
- * &lt;/beans&gt;
+ * < /beans>
  * </pre>
  *
- * In both of the scenarios above, {@code @EnableCaching} and {@code
- * <cache:annotation-driven/>} are responsible for registering the necessary Spring
- * components that power annotation-driven cache management, such as the
- * {@link org.springframework.cache.interceptor.CacheInterceptor CacheInterceptor} and the
- * proxy- or AspectJ-based advice that weaves the interceptor into the call stack when
- * {@link org.springframework.cache.annotation.Cacheable @Cacheable} methods are invoked.
+ * 在以上的两种场景中 {@code @EnableCaching} 和 {@code < cache:annotation-driven/>} 都负责注册
+ * Spring中注解驱动缓存管理的必要组件，
+ * 比如 {@link org.springframework.cache.interceptor.CacheInterceptor CacheInterceptor}
+ * 和调用 {@link org.springframework.cache.annotation.Cacheable @Cacheable}
+ * 时通过基于代理或AspectJ的增强将拦截器编织到调用堆栈中。
  *
- * <p>If the JSR-107 API and Spring's JCache implementation are present, the necessary
- * components to manage standard cache annotations are also registered. This creates the
- * proxy- or AspectJ-based advice that weaves the interceptor into the call stack when
- * methods annotated with {@code CacheResult}, {@code CachePut}, {@code CacheRemove} or
- * {@code CacheRemoveAll} are invoked.
+ * 如果存在 JSR-107 API和Spring JCache 实现，则还将注册用于管理标准缓存注解的必要组件。
+ * 这会在被 {@code CacheResult}, {@code CachePut}, {@code CacheRemove} 或
+ * {@code CacheRemoveAll} 注解的方法被调用时创建基于代理或AspectJ的增强，编制到调用堆栈中。
  *
- * <p><strong>A bean of type {@link org.springframework.cache.CacheManager CacheManager}
- * must be registered</strong>, as there is no reasonable default that the framework can
- * use as a convention. And whereas the {@code <cache:annotation-driven>} element assumes
- * a bean <em>named</em> "cacheManager", {@code @EnableCaching} searches for a cache
- * manager bean <em>by type</em>. Therefore, naming of the cache manager bean method is
- * not significant.
+ * 当框架没有一个合理的默认值可以使用的时候，会创建一个类型为
+ * {@link org.springframework.cache.CacheManager CacheManager} 的bean。
+ * {@code @EnableCaching} 通过类型 by type 寻找项目中的缓存管理器，而 {@code <cache:annotation-driven>}
+ * 则通过名称 named "cacheManager"来寻找。因此缓存管理器的命名就不是很重要了。
  *
- * <p>For those that wish to establish a more direct relationship between
- * {@code @EnableCaching} and the exact cache manager bean to be used,
- * the {@link CachingConfigurer} callback interface may be implemented.
- * Notice the {@code @Override}-annotated methods below:
+ * 对于想要在 {@code @EnableCaching} 和确切的缓存管理器之间建立更直接关系的用户，
+ * 可以实现 {@link CachingConfigurer} 回调接口。
+ * 注意看一下被 {@code @Override} 标记的方法：
  *
  * <pre class="code">
- * &#064;Configuration
- * &#064;EnableCaching
+ * @ Configuration
+ * @ EnableCaching
  * public class AppConfig extends CachingConfigurerSupport {
  *
- *     &#064;Bean
+ *     @ Bean
  *     public MyService myService() {
- *         // configure and return a class having &#064;Cacheable methods
+ *         // configure and return a class having @ Cacheable methods
  *         return new MyService();
  *     }
  *
- *     &#064;Bean
- *     &#064;Override
+ *     @ Bean
+ *     @ Override
  *     public CacheManager cacheManager() {
  *         // configure and return an implementation of Spring's CacheManager SPI
  *         SimpleCacheManager cacheManager = new SimpleCacheManager();
@@ -120,26 +107,21 @@ import org.springframework.core.Ordered;
  *         return cacheManager;
  *     }
  *
- *     &#064;Bean
- *     &#064;Override
+ *     @ Bean
+ *     @ Override
  *     public KeyGenerator keyGenerator() {
  *         // configure and return an implementation of Spring's KeyGenerator SPI
  *         return new MyKeyGenerator();
  *     }
  * }</pre>
  *
- * This approach may be desirable simply because it is more explicit, or it may be
- * necessary in order to distinguish between two {@code CacheManager} beans present in the
- * same container.
- *
- * <p>Notice also the {@code keyGenerator} method in the example above. This allows for
- * customizing the strategy for cache key generation, per Spring's {@link
- * org.springframework.cache.interceptor.KeyGenerator KeyGenerator} SPI. Normally,
- * {@code @EnableCaching} will configure Spring's
+ * 这种方式简单可取，因为它是显式的，或者说如果需要区分一个容器中两个 {@code CacheManager} 的时候
+ * 是必须这么做的。注意以上例子中 {@code keyGenerator} 方法也被重写。这个方法允许通过
+ * Spring's {@link org.springframework.cache.interceptor.KeyGenerator KeyGenerator} SPI
+ * 自定义缓存key生成策略。一般情况下， {@code @EnableCaching} 会配置一个默认的
  * {@link org.springframework.cache.interceptor.SimpleKeyGenerator SimpleKeyGenerator}
- * for this purpose, but when implementing {@code CachingConfigurer}, a key generator
- * must be provided explicitly. Return {@code null} or {@code new SimpleKeyGenerator()}
- * from this method if no customization is necessary.
+ * 生成策略，但是实现了 {@code CachingConfigurer} 的话，必须显式地提供一个key生成器。
+ * 如果不需要自定义的话，可以返回 {@code null} 或 {@code new SimpleKeyGenerator()}。
  *
  * <p>{@link CachingConfigurer} offers additional customization options: it is recommended
  * to extend from {@link org.springframework.cache.annotation.CachingConfigurerSupport

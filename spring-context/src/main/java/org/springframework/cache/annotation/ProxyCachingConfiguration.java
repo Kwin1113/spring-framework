@@ -26,8 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 
 /**
- * {@code @Configuration} class that registers the Spring infrastructure beans necessary
- * to enable proxy-based annotation-driven cache management.
+ * 注册基于代理proxy-based的注解驱动annotation-driven缓存管理下Spring基础bean的配置类 {@code @Configuration}。
  *
  * @author Chris Beams
  * @author Juergen Hoeller
