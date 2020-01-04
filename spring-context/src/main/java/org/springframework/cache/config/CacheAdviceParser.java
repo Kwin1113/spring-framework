@@ -42,7 +42,7 @@ import org.springframework.util.xml.DomUtils;
 
 /**
  * {@link org.springframework.beans.factory.xml.BeanDefinitionParser
- * BeanDefinitionParser} for the {@code <tx:advice/>} tag.
+ * BeanDefinitionParser} 用来解析 {@code <tx:advice/>} 标签。
  *
  * @author Costin Leau
  * @author Phillip Webb
@@ -183,7 +183,7 @@ class CacheAdviceParser extends AbstractSingleBeanDefinitionParser {
 
 
 	/**
-	 * Simple, reusable class used for overriding defaults.
+	 * 用于重载默认值的简单可重用的类。
 	 */
 	private static class Props {
 
