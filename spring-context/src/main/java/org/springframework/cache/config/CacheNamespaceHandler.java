@@ -24,11 +24,9 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 import org.springframework.util.StringUtils;
 
 /**
- * {@code NamespaceHandler} allowing for the configuration of declarative
- * cache management using either XML or using annotations.
+ * {@code NamespaceHandler} 允许使用XML或注解的方式配置声明式缓存管理。
  *
- * <p>This namespace handler is the central piece of functionality in the
- * Spring cache management facilities.
+ * 这个命名空间处理器时Spring缓存管理功能中的核心。
  *
  * @author Costin Leau
  * @since 3.1

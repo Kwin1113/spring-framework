@@ -31,11 +31,10 @@ import org.springframework.expression.Expression;
 import org.springframework.lang.Nullable;
 
 /**
- * Utility class handling the SpEL expression parsing.
- * Meant to be used as a reusable, thread-safe component.
+ * 解析SpEL表达式的工具类。
+ * 作为可重用，线程安全的组件使用。
  *
- * <p>Performs internal caching for performance reasons
- * using {@link AnnotatedElementKey}.
+ * 出于性能原因，执行内部缓存时使用 {@link AnnotatedElementKey}。
  *
  * @author Costin Leau
  * @author Phillip Webb
@@ -46,17 +45,17 @@ import org.springframework.lang.Nullable;
 class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 	/**
-	 * Indicate that there is no result variable.
+	 * 表示没有任何结果变量。
 	 */
 	public static final Object NO_RESULT = new Object();
 
 	/**
-	 * Indicate that the result variable cannot be used at all.
+	 * 表示结果变量无法使用。
 	 */
 	public static final Object RESULT_UNAVAILABLE = new Object();
 
 	/**
-	 * The name of the variable holding the result object.
+	 * 持有结果对象的变量名称。
 	 */
 	public static final String RESULT_VARIABLE = "result";
 
@@ -69,15 +68,14 @@ class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 
 	/**
-	 * Create an {@link EvaluationContext}.
-	 * @param caches the current caches
-	 * @param method the method
-	 * @param args the method arguments
-	 * @param target the target object
-	 * @param targetClass the target class
-	 * @param result the return value (can be {@code null}) or
-	 * {@link #NO_RESULT} if there is no return at this time
-	 * @return the evaluation context
+	 * 创建一个{@link EvaluationContext}。
+	 * @param caches 当前缓存
+	 * @param method 方法
+	 * @param args 方法参数
+	 * @param target 目标对象
+	 * @param targetClass 目标类
+	 * @param result 如果当前没有返回值，则返回{@code result}的值（可以为{@code null}）或{@link #NO_RESULT}
+	 * @return 求值上下文
 	 */
 	public EvaluationContext createEvaluationContext(Collection<? extends Cache> caches,
 			Method method, Object[] args, Object target, Class<?> targetClass, Method targetMethod,
@@ -115,7 +113,7 @@ class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 	}
 
 	/**
-	 * Clear all caches.
+	 * 清空所有缓存。
 	 */
 	void clear() {
 		this.keyCache.clear();

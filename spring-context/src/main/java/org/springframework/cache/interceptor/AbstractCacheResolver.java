@@ -27,9 +27,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * A base {@link CacheResolver} implementation that requires the concrete
- * implementation to provide the collection of cache name(s) based on the
- * invocation context.
+ * 一个{@link CacheResolver}的基础实现类，要求具体的实现类提供基于调用
+ * 上下文的缓存名称集合。
  *
  * @author Stephane Nicoll
  * @author Juergen Hoeller
@@ -42,15 +41,17 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 
 
 	/**
-	 * Construct a new {@code AbstractCacheResolver}.
+	 * 创建一个新的{@code AbstractCacheResolver}。
+	 *
 	 * @see #setCacheManager
 	 */
 	protected AbstractCacheResolver() {
 	}
 
 	/**
-	 * Construct a new {@code AbstractCacheResolver} for the given {@link CacheManager}.
-	 * @param cacheManager the CacheManager to use
+	 * 通过给定的{@link CacheManager}创建一个新的{@code AbstractCacheResolver}。
+	 *
+	 * @param cacheManager 使用的 CacheManager
 	 */
 	protected AbstractCacheResolver(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
@@ -58,14 +59,14 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 
 
 	/**
-	 * Set the {@link CacheManager} that this instance should use.
+	 * 设置该实例要使用的{@link CacheManager}
 	 */
 	public void setCacheManager(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
 	}
 
 	/**
-	 * Return the {@link CacheManager} that this instance uses.
+	 * 返回该实例使用的{@link CacheManager}
 	 */
 	public CacheManager getCacheManager() {
 		Assert.state(this.cacheManager != null, "No CacheManager set");
@@ -73,7 +74,7 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 	}
 
 	@Override
-	public void afterPropertiesSet()  {
+	public void afterPropertiesSet() {
 		Assert.notNull(this.cacheManager, "CacheManager is required");
 	}
 
@@ -97,11 +98,11 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 	}
 
 	/**
-	 * Provide the name of the cache(s) to resolve against the current cache manager.
-	 * <p>It is acceptable to return {@code null} to indicate that no cache could
-	 * be resolved for this invocation.
-	 * @param context the context of the particular invocation
-	 * @return the cache name(s) to resolve, or {@code null} if no cache should be resolved
+	 * 根据当前的缓存管理器提供需要解析的缓存名称。
+	 * 该会返回{@code null}，表示这次调用没有缓存可以解析。
+	 *
+	 * @param context 特定调用的上下文
+	 * @return 需要解析的缓存名称集合，如果没有缓存可以解析则返回{@code null}
 	 */
 	@Nullable
 	protected abstract Collection<String> getCacheNames(CacheOperationInvocationContext<?> context);

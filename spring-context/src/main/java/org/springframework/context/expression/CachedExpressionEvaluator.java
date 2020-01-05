@@ -27,8 +27,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
- * Shared utility class used to evaluate and cache SpEL expressions that
- * are defined on {@link java.lang.reflect.AnnotatedElement}.
+ * 用于求值计算和缓存定义在{@link java.lang.reflect.AnnotatedElement}上
+ * 的SpEL表达式的共享实用工具类。
  *
  * @author Stephane Nicoll
  * @since 4.2
@@ -42,7 +42,7 @@ public abstract class CachedExpressionEvaluator {
 
 
 	/**
-	 * Create a new instance with the specified {@link SpelExpressionParser}.
+	 * 创建指定{@link SpelExpressionParser}的新实例。
 	 */
 	protected CachedExpressionEvaluator(SpelExpressionParser parser) {
 		Assert.notNull(parser, "SpelExpressionParser must not be null");
@@ -50,7 +50,7 @@ public abstract class CachedExpressionEvaluator {
 	}
 
 	/**
-	 * Create a new instance with a default {@link SpelExpressionParser}.
+	 * 创建默认{@link SpelExpressionParser}的新实例。
 	 */
 	protected CachedExpressionEvaluator() {
 		this(new SpelExpressionParser());
@@ -58,14 +58,14 @@ public abstract class CachedExpressionEvaluator {
 
 
 	/**
-	 * Return the {@link SpelExpressionParser} to use.
+	 * 返回使用的{@link SpelExpressionParser}。
 	 */
 	protected SpelExpressionParser getParser() {
 		return this.parser;
 	}
 
 	/**
-	 * Return a shared parameter name discoverer which caches data internally.
+	 * 返回一个共享的参数名称发现器，其在内部缓存数据。
 	 * @since 4.3
 	 */
 	protected ParameterNameDiscoverer getParameterNameDiscoverer() {
@@ -74,11 +74,11 @@ public abstract class CachedExpressionEvaluator {
 
 
 	/**
-	 * Return the {@link Expression} for the specified SpEL value
-	 * <p>Parse the expression if it hasn't been already.
-	 * @param cache the cache to use
-	 * @param elementKey the element on which the expression is defined
-	 * @param expression the expression to parse
+	 * 返回指定SpEL值的{@link Expression}。
+	 * 解析未解析的表达式。
+	 * @param cache 使用的缓存
+	 * @param elementKey 表达式定义所在的元素element
+	 * @param expression 解析的表达式
 	 */
 	protected Expression getExpression(Map<ExpressionKey, Expression> cache,
 			AnnotatedElementKey elementKey, String expression) {
@@ -98,7 +98,7 @@ public abstract class CachedExpressionEvaluator {
 
 
 	/**
-	 * An expression key.
+	 * 表达式key。
 	 */
 	protected static class ExpressionKey implements Comparable<ExpressionKey> {
 

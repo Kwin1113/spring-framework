@@ -57,20 +57,17 @@ import org.springframework.util.function.SingletonSupplier;
 import org.springframework.util.function.SupplierUtils;
 
 /**
- * Base class for caching aspects, such as the {@link CacheInterceptor} or an
- * AspectJ aspect.
+ * 缓存切面的基础类，例如缓存拦截器{@link CacheInterceptor}或AspectJ切面。
  *
- * <p>This enables the underlying Spring caching infrastructure to be used easily
- * to implement an aspect for any aspect system.
+ * 该类使Spring底层缓存基础结构可以轻松地实现一个切面或其他任何切面系统。
  *
- * <p>Subclasses are responsible for calling relevant methods in the correct order.
+ * 子类负责以正确的顺序调用相关方法。
  *
- * <p>Uses the <b>Strategy</b> design pattern. A {@link CacheOperationSource} is
- * used for determining caching operations, a {@link KeyGenerator} will build the
- * cache keys, and a {@link CacheResolver} will resolve the actual cache(s) to use.
+ * 使用了设计模式中的策略模式。{@link CacheOperationSource}用于确定缓存操作，
+ * {@link KeyGenerator}用于生成缓存key，{@link CacheResolver}用于解析实际
+ * 使用的缓存。
  *
- * <p>Note: A cache aspect is serializable but does not perform any actual caching
- * after deserialization.
+ * 注意：缓存切面是可序列化的，但反序列化之后不执行任何缓存。
  *
  * @author Costin Leau
  * @author Juergen Hoeller

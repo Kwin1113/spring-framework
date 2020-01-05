@@ -21,9 +21,9 @@ import java.util.Collection;
 import org.springframework.cache.Cache;
 
 /**
- * Determine the {@link Cache} instance(s) to use for an intercepted method invocation.
- *
- * <p>Implementations must be thread-safe.
+ * 确定拦截方法调用的{@link Cache}实例。
+ * <p>
+ * 实现类必须是线程安全的。
  *
  * @author Stephane Nicoll
  * @since 4.1
@@ -32,10 +32,11 @@ import org.springframework.cache.Cache;
 public interface CacheResolver {
 
 	/**
-	 * Return the cache(s) to use for the specified invocation.
-	 * @param context the context of the particular invocation
-	 * @return the cache(s) to use (never {@code null})
-	 * @throws IllegalStateException if cache resolution failed
+	 * 返回用于指定调用的缓存。
+	 *
+	 * @param context 特定调用的上下文
+	 * @return 使用的缓存 (永不为 {@code null})
+	 * @throws IllegalStateException 如果缓存解析失败
 	 */
 	Collection<? extends Cache> resolveCaches(CacheOperationInvocationContext<?> context);
 
