@@ -16,26 +16,23 @@
 
 package org.springframework.cache.interceptor;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.lang.Nullable;
 
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * Cache specific evaluation context that adds a method parameters as SpEL
- * variables, in a lazy manner. The lazy nature eliminates unneeded
- * parsing of classes byte code for parameter discovery.
- *
- * <p>Also define a set of "unavailable variables" (i.e. variables that should
- * lead to an exception right the way when they are accessed). This can be useful
- * to verify a condition does not match even when not all potential variables
- * are present.
- *
- * <p>To limit the creation of objects, an ugly constructor is used
- * (rather then a dedicated 'closure'-like class for deferred execution).
+ * 缓存特定求值上下文，以懒加载的方式将方法参数添加为SpEL变量
+ * 懒加载消除了参数发现时不必要的类字节码的解析
+ * <p>
+ * 还定义了一组“不可用变量”（即，在访问变量时应导致异常的变量）。
+ * 这对于验证条件不满足时（即使不是所有潜在变量都存在时）很有用。
+ * <p>
+ * 为了限制对象的创建，提供了一个很‘丑陋’的构造器
+ * （不是专门的闭包类-用于延迟加载）
  *
  * @author Costin Leau
  * @author Stephane Nicoll
@@ -48,18 +45,17 @@ class CacheEvaluationContext extends MethodBasedEvaluationContext {
 
 
 	CacheEvaluationContext(Object rootObject, Method method, Object[] arguments,
-			ParameterNameDiscoverer parameterNameDiscoverer) {
+						   ParameterNameDiscoverer parameterNameDiscoverer) {
 
 		super(rootObject, method, arguments, parameterNameDiscoverer);
 	}
 
 
 	/**
-	 * Add the specified variable name as unavailable for that context.
-	 * Any expression trying to access this variable should lead to an exception.
-	 * <p>This permits the validation of expressions that could potentially a
-	 * variable even when such variable isn't available yet. Any expression
-	 * trying to use that variable should therefore fail to evaluate.
+	 * 将指定的变量名称添加为上下文不可用。
+	 * 任何尝试使用该变量的表达式都将引起异常。
+	 * 可以验证可能存在变量的表达式，即使该变量不可用。因此所有尝试使用该变量的表达式都会
+	 * 求值失败。
 	 */
 	public void addUnavailableVariable(String name) {
 		this.unavailableVariables.add(name);
@@ -67,7 +63,7 @@ class CacheEvaluationContext extends MethodBasedEvaluationContext {
 
 
 	/**
-	 * Load the param information only when needed.
+	 * 只在需要时加载参数信息
 	 */
 	@Override
 	@Nullable

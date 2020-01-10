@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * A simple key as returned from the {@link SimpleKeyGenerator}.
+ * {@link SimpleKeyGenerator}返回的简单的key
  *
  * @author Phillip Webb
  * @since 4.0
@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public class SimpleKey implements Serializable {
 
-	/** An empty key. */
+	/** 空key. */
 	public static final SimpleKey EMPTY = new SimpleKey();
 
 
@@ -43,8 +43,8 @@ public class SimpleKey implements Serializable {
 
 
 	/**
-	 * Create a new {@link SimpleKey} instance.
-	 * @param elements the elements of the key
+	 * 创建一个新{@link SimpleKey}实例。
+	 * @param elements 构造key的元素
 	 */
 	public SimpleKey(Object... elements) {
 		Assert.notNull(elements, "Elements must not be null");

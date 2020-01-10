@@ -25,16 +25,16 @@ import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.cache.CacheManager;
 
 /**
- * Proxy factory bean for simplified declarative caching handling.
- * This is a convenient alternative to a standard AOP
- * {@link org.springframework.aop.framework.ProxyFactoryBean}
- * with a separate {@link CacheInterceptor} definition.
+ * 代理工厂bean，用于简化声明式缓存处理。
+ * 这是使用标准AOP{@link org.springframework.aop.framework.ProxyFactoryBean}
+ * 的一个便捷替代方式，并且包含一个{@link CacheInterceptor}定义。
  *
- * <p>This class is designed to facilitate declarative cache demarcation: namely, wrapping
- * a singleton target object with a caching proxy, proxying all the interfaces that the
- * target implements. Exists primarily for third-party framework integration.
- * <strong>Users should favor the {@code cache:} XML namespace
- * {@link org.springframework.cache.annotation.Cacheable @Cacheable} annotation.</strong>
+ * 该类方便划分声明式缓存划分：按名称，用缓存代理包装一个单例目标对象，代理目标实现类实现的所有接口。
+ * 主要存在于集合第三方框架中。
+ *
+ * 用户最好使用{@code cache:}XML命名空间、
+ * {@link org.springframework.cache.annotation.Cacheable @Cacheable}注解。
+ *
  * See the
  * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache-annotations">declarative annotation-based caching</a>
  * section of the Spring reference documentation for more information.

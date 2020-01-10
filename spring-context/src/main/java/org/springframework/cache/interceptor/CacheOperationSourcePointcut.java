@@ -27,8 +27,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
- * A Pointcut that matches if the underlying {@link CacheOperationSource}
- * has an attribute for a given method.
+ * 如果基础{@link CacheOperationSource}具有给定方法的属性，则该Pointcut匹配。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
@@ -72,16 +71,16 @@ abstract class CacheOperationSourcePointcut extends StaticMethodMatcherPointcut 
 
 
 	/**
-	 * Obtain the underlying {@link CacheOperationSource} (may be {@code null}).
-	 * To be implemented by subclasses.
+	 * 获得底层的{@link CacheOperationSource}（可能为{@code null}）
+	 * 需要被子类实现。
 	 */
 	@Nullable
 	protected abstract CacheOperationSource getCacheOperationSource();
 
 
 	/**
-	 * {@link ClassFilter} that delegates to {@link CacheOperationSource#isCandidateClass}
-	 * for filtering classes whose methods are not worth searching to begin with.
+	 * 委托给{@link CacheOperationSource#isCandidateClass}的类过滤器{@link ClassFilter}，
+	 * 用来过滤不用搜索的类。
 	 */
 	private class CacheOperationSourceClassFilter implements ClassFilter {
 
