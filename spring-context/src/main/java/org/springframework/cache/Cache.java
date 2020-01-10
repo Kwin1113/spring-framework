@@ -16,16 +16,14 @@
 
 package org.springframework.cache;
 
-import java.util.concurrent.Callable;
-
 import org.springframework.lang.Nullable;
 
+import java.util.concurrent.Callable;
+
 /**
- * Interface that defines common cache operations.
- *
- * <b>Note:</b> Due to the generic use of caching, it is recommended that
- * implementations allow storage of <tt>null</tt> values (for example to
- * cache methods that return {@code null}).
+ * 定义了通用缓存操作的接口
+ * <p>
+ * 注意：由于缓存的一般用法，建议实现允许存储空值（例如，缓存返回{@code null}的方法）。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
@@ -35,25 +33,24 @@ import org.springframework.lang.Nullable;
 public interface Cache {
 
 	/**
-	 * Return the cache name.
+	 * 返回缓存名称
 	 */
 	String getName();
 
 	/**
-	 * Return the underlying native cache provider.
+	 * 返回底层的本地缓存提供者
 	 */
 	Object getNativeCache();
 
 	/**
-	 * Return the value to which this cache maps the specified key.
-	 * <p>Returns {@code null} if the cache contains no mapping for this key;
-	 * otherwise, the cached value (which may be {@code null} itself) will
-	 * be returned in a {@link ValueWrapper}.
-	 * @param key the key whose associated value is to be returned
-	 * @return the value to which this cache maps the specified key,
-	 * contained within a {@link ValueWrapper} which may also hold
-	 * a cached {@code null} value. A straight {@code null} being
-	 * returned means that the cache contains no mapping for this key.
+	 * 返回缓存中该特定key对应的值。
+	 * 如果缓存中该key没有映射，则返回{@code null}；否则，缓存的值
+	 * （本身可能为{@code null}）将在{@link ValueWrapper}中返回。
+	 *
+	 * @param key 返回值对应的key
+	 * @return 返回缓存中该特定key对应的值，缓存的值本身可能为{@code null}）
+	 * 将在{@link ValueWrapper}中返回。直接返回{@code null}表示缓存中
+	 * 没有该key的映射
 	 * @see #get(Object, Class)
 	 * @see #get(Object, Callable)
 	 */
@@ -61,60 +58,56 @@ public interface Cache {
 	ValueWrapper get(Object key);
 
 	/**
-	 * Return the value to which this cache maps the specified key,
-	 * generically specifying a type that return value will be cast to.
-	 * <p>Note: This variant of {@code get} does not allow for differentiating
-	 * between a cached {@code null} value and no cache entry found at all.
-	 * Use the standard {@link #get(Object)} variant for that purpose instead.
-	 * @param key the key whose associated value is to be returned
-	 * @param type the required type of the returned value (may be
-	 * {@code null} to bypass a type check; in case of a {@code null}
-	 * value found in the cache, the specified type is irrelevant)
-	 * @return the value to which this cache maps the specified key
-	 * (which may be {@code null} itself), or also {@code null} if
-	 * the cache contains no mapping for this key
-	 * @throws IllegalStateException if a cache entry has been found
-	 * but failed to match the specified type
-	 * @since 4.0
+	 * 返回缓存中该特定key对应的值。
+	 * 一般指定一个返回值的类型来将其转型。
+	 * 注意：该{@code get}方法的变体无法区分缓存的{@code null}和无法找到缓存的情况
+	 * 如果想要区分，使用标准的{@link #get(Object)}方法
+	 *
+	 * @param key  返回值对应的key
+	 * @param type 返回值的类型（可以是{@code null}来绕过类型检查）
+	 *             如果在缓存中找到{@code null}值，则指定的类型无关紧要
+	 * @return 返回缓存中该特定key对应的值，缓存的值本身可能为{@code null}）
+	 * 将在{@link ValueWrapper}中返回。直接返回{@code null}表示缓存中
+	 * 没有该key的映射
+	 * @throws IllegalStateException 如果找到了一个缓存键值对但是无法匹配指定的类型
 	 * @see #get(Object)
+	 * @since 4.0
 	 */
 	@Nullable
 	<T> T get(Object key, @Nullable Class<T> type);
 
 	/**
-	 * Return the value to which this cache maps the specified key, obtaining
-	 * that value from {@code valueLoader} if necessary. This method provides
-	 * a simple substitute for the conventional "if cached, return; otherwise
-	 * create, cache and return" pattern.
-	 * <p>If possible, implementations should ensure that the loading operation
-	 * is synchronized so that the specified {@code valueLoader} is only called
-	 * once in case of concurrent access on the same key.
-	 * <p>If the {@code valueLoader} throws an exception, it is wrapped in
-	 * a {@link ValueRetrievalException}
-	 * @param key the key whose associated value is to be returned
-	 * @return the value to which this cache maps the specified key
-	 * @throws ValueRetrievalException if the {@code valueLoader} throws an exception
-	 * @since 4.3
+	 * 返回缓存中该特定key对应的值，有必要的话从{@code valueLoader}获取值。
+	 * 该方法提供了一个常规模式（if cached, return; otherwise create, cache and return）
+	 * 的简单替代。
+	 * 如果可能的话，实现类应该在加载操作时是同步的，保证多个线程在同一个key的情况下特定的
+	 * {@code valueLoader}只被调用一次。
+	 * 如果{@code valueLoader}抛出异常，将会被{@link ValueRetrievalException}包装处理。
+	 *
+	 * @param key 返回值对应的key
+	 * @return 缓存中匹配指定key的值
+	 * @throws ValueRetrievalException 如果{@code valueLoader}抛出异常
 	 * @see #get(Object)
+	 * @since 4.3
 	 */
 	@Nullable
 	<T> T get(Object key, Callable<T> valueLoader);
 
 	/**
-	 * Associate the specified value with the specified key in this cache.
-	 * <p>If the cache previously contained a mapping for this key, the old
-	 * value is replaced by the specified value.
-	 * <p>Actual registration may be performed in an asynchronous or deferred
-	 * fashion, with subsequent lookups possibly not seeing the entry yet.
-	 * This may for example be the case with transactional cache decorators.
-	 * Use {@link #putIfAbsent} for guaranteed immediate registration.
-	 * @param key the key with which the specified value is to be associated
-	 * @param value the value to be associated with the specified key
+	 * 在该缓存中，将给定key和给定value联系起来。
+	 * 如果缓存中之前存在该key的映射，旧的value将会被给定的value替换。
+	 * 实际的注册可以通过异步或延迟的方式执行，金穗的查找可能暂时无法找到
+	 * 该缓存键值对。这是事务缓存装饰器transactional cache decorators的一种
+	 * 示例情况。可以使用{@link #putIfAbsent}保证立即注册。
+	 *
+	 * @param key   映射关系中的key
+	 * @param value 映射关系的value
 	 * @see #putIfAbsent(Object, Object)
 	 */
 	void put(Object key, @Nullable Object value);
 
 	/**
+	 * 自动建立缓存中给定key和给定value的联系（如果联系未建立）
 	 * Atomically associate the specified value with the specified key in this cache
 	 * if it is not set already.
 	 * <p>This is equivalent to:
@@ -132,14 +125,15 @@ public interface Cache {
 	 * of the native cache implementation that you are using for more details.
 	 * <p>The default implementation delegates to {@link #get(Object)} and
 	 * {@link #put(Object, Object)} along the lines of the code snippet above.
-	 * @param key the key with which the specified value is to be associated
+	 *
+	 * @param key   the key with which the specified value is to be associated
 	 * @param value the value to be associated with the specified key
 	 * @return the value to which this cache maps the specified key (which may be
 	 * {@code null} itself), or also {@code null} if the cache did not contain any
 	 * mapping for that key prior to this call. Returning {@code null} is therefore
 	 * an indicator that the given {@code value} has been associated with the key.
-	 * @since 4.1
 	 * @see #put(Object, Object)
+	 * @since 4.1
 	 */
 	@Nullable
 	default ValueWrapper putIfAbsent(Object key, @Nullable Object value) {
@@ -156,6 +150,7 @@ public interface Cache {
 	 * fashion, with subsequent lookups possibly still seeing the entry.
 	 * This may for example be the case with transactional cache decorators.
 	 * Use {@link #evictIfPresent} for guaranteed immediate removal.
+	 *
 	 * @param key the key whose mapping is to be removed from the cache
 	 * @see #evictIfPresent(Object)
 	 */
@@ -170,12 +165,13 @@ public interface Cache {
 	 * to perform immediate eviction if possible (e.g. in case of generally
 	 * deferred cache operations within a transaction) and to reliably
 	 * determine prior presence of the given key.
+	 *
 	 * @param key the key whose mapping is to be removed from the cache
 	 * @return {@code true} if the cache was known to have a mapping for
 	 * this key before, {@code false} if it did not (or if prior presence
 	 * could not be determined)
-	 * @since 5.2
 	 * @see #evict(Object)
+	 * @since 5.2
 	 */
 	default boolean evictIfPresent(Object key) {
 		evict(key);
@@ -188,6 +184,7 @@ public interface Cache {
 	 * fashion, with subsequent lookups possibly still seeing the entries.
 	 * This may for example be the case with transactional cache decorators.
 	 * Use {@link #invalidate()} for guaranteed immediate removal of entries.
+	 *
 	 * @see #invalidate()
 	 */
 	void clear();
@@ -195,11 +192,12 @@ public interface Cache {
 	/**
 	 * Invalidate the cache through removing all mappings, expecting all
 	 * entries to be immediately invisible for subsequent lookups.
+	 *
 	 * @return {@code true} if the cache was known to have mappings before,
 	 * {@code false} if it did not (or if prior presence of entries could
 	 * not be determined)
-	 * @since 5.2
 	 * @see #clear()
+	 * @since 5.2
 	 */
 	default boolean invalidate() {
 		clear();
@@ -224,6 +222,7 @@ public interface Cache {
 	/**
 	 * Wrapper exception to be thrown from {@link #get(Object, Callable)}
 	 * in case of the value loader callback failing with an exception.
+	 *
 	 * @since 4.3
 	 */
 	@SuppressWarnings("serial")
