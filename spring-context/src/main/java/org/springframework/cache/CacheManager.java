@@ -21,9 +21,9 @@ import java.util.Collection;
 import org.springframework.lang.Nullable;
 
 /**
- * Spring's central cache manager SPI.
+ * Spring的主要缓存管理SPI
  *
- * <p>Allows for retrieving named {@link Cache} regions.
+ * 用来检索命名缓存空间named {@link Cache} regions.。
  *
  * @author Costin Leau
  * @author Sam Brannen
@@ -32,19 +32,18 @@ import org.springframework.lang.Nullable;
 public interface CacheManager {
 
 	/**
-	 * Get the cache associated with the given name.
-	 * <p>Note that the cache may be lazily created at runtime if the
-	 * native provider supports it.
-	 * @param name the cache identifier (must not be {@code null})
-	 * @return the associated cache, or {@code null} if such a cache
-	 * does not exist or could be not created
+	 * 获取给定名称对应的缓存。
+	 * 注意：如果本地提供者支持的话，缓存可能在运行时进行懒加载。
+	 *
+	 * @param name 缓存标识符（不能为{@code null}）
+	 * @return 对应的缓存，如果不存在该缓存或无法被创建则返回{@code null}
 	 */
 	@Nullable
 	Cache getCache(String name);
 
 	/**
-	 * Get a collection of the cache names known by this manager.
-	 * @return the names of all caches known by the cache manager
+	 * 返回该缓存管理器已知的缓存名称集合。
+	 * @return 该缓存管理器一直的所有缓存名称集合
 	 */
 	Collection<String> getCacheNames();
 

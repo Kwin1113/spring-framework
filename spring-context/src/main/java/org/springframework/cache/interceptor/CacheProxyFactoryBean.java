@@ -28,22 +28,22 @@ import org.springframework.cache.CacheManager;
  * 代理工厂bean，用于简化声明式缓存处理。
  * 这是使用标准AOP{@link org.springframework.aop.framework.ProxyFactoryBean}
  * 的一个便捷替代方式，并且包含一个{@link CacheInterceptor}定义。
- *
+ * <p>
  * 该类方便划分声明式缓存划分：按名称，用缓存代理包装一个单例目标对象，代理目标实现类实现的所有接口。
  * 主要存在于集合第三方框架中。
- *
+ * <p>
  * 用户最好使用{@code cache:}XML命名空间、
  * {@link org.springframework.cache.annotation.Cacheable @Cacheable}注解。
- *
+ * <p>
  * See the
  * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache-annotations">declarative annotation-based caching</a>
  * section of the Spring reference documentation for more information.
  *
  * @author Costin Leau
  * @author Juergen Hoeller
- * @since 3.1
  * @see org.springframework.aop.framework.ProxyFactoryBean
  * @see CacheInterceptor
+ * @since 3.1
  */
 @SuppressWarnings("serial")
 public class CacheProxyFactoryBean extends AbstractSingletonProxyFactoryBean
@@ -55,7 +55,8 @@ public class CacheProxyFactoryBean extends AbstractSingletonProxyFactoryBean
 
 
 	/**
-	 * Set one or more sources to find cache operations.
+	 * 设置一个或多个源来查询缓存操作。
+	 *
 	 * @see CacheInterceptor#setCacheOperationSources
 	 */
 	public void setCacheOperationSources(CacheOperationSource... cacheOperationSources) {
@@ -63,42 +64,44 @@ public class CacheProxyFactoryBean extends AbstractSingletonProxyFactoryBean
 	}
 
 	/**
-	 * Set the default {@link KeyGenerator} that this cache aspect should delegate to
-	 * if no specific key generator has been set for the operation.
-	 * <p>The default is a {@link SimpleKeyGenerator}.
-	 * @since 5.0.3
+	 * 如果该操作没有指定特定的key生成器，指定该缓存切面需要委托的默认的{@link KeyGenerator}。
+	 * 默认为{@link SimpleKeyGenerator}.
+	 *
 	 * @see CacheInterceptor#setKeyGenerator
+	 * @since 5.0.3
 	 */
 	public void setKeyGenerator(KeyGenerator keyGenerator) {
 		this.cacheInterceptor.setKeyGenerator(keyGenerator);
 	}
 
 	/**
-	 * Set the default {@link CacheResolver} that this cache aspect should delegate
-	 * to if no specific cache resolver has been set for the operation.
-	 * <p>The default resolver resolves the caches against their names and the
-	 * default cache manager.
-	 * @since 5.0.3
+	 * 如果该操作没有指定特定的缓存处理器，指定该缓存切面需要委托的默认的{@link CacheResolver}。
+	 * 默认的处理器根据默认的缓存处理器和缓存名称处理缓存。
+	 *
 	 * @see CacheInterceptor#setCacheResolver
+	 * @since 5.0.3
 	 */
 	public void setCacheResolver(CacheResolver cacheResolver) {
 		this.cacheInterceptor.setCacheResolver(cacheResolver);
 	}
 
 	/**
-	 * Set the {@link CacheManager} to use to create a default {@link CacheResolver}.
-	 * Replace the current {@link CacheResolver}, if any.
-	 * @since 5.0.3
+	 * 设置{@link CacheManager}来创建默认的{@link CacheResolver}。
+	 * 如果存在{@link CacheResolver}，则替代他。
+	 *
 	 * @see CacheInterceptor#setCacheManager
+	 * @since 5.0.3
 	 */
 	public void setCacheManager(CacheManager cacheManager) {
 		this.cacheInterceptor.setCacheManager(cacheManager);
 	}
 
 	/**
-	 * Set a pointcut, i.e. a bean that triggers conditional invocation of the
-	 * {@link CacheInterceptor} depending on the method and attributes passed.
+	 * 设置一个切面，即一个触发{@link CacheInterceptor}的条件性调用conditional invocation的bean。
+	 * 该缓存拦截器依赖于方法和传参的
+	 * 注意：始终调用其他拦截器。
 	 * <p>Note: Additional interceptors are always invoked.
+	 *
 	 * @see #setPreInterceptors
 	 * @see #setPostInterceptors
 	 */

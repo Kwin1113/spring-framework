@@ -16,29 +16,11 @@
 
 package org.springframework.cache.interceptor;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
-import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -46,27 +28,27 @@ import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.util.function.SingletonSupplier;
 import org.springframework.util.function.SupplierUtils;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
 /**
  * 缓存切面的基础类，例如缓存拦截器{@link CacheInterceptor}或AspectJ切面。
- *
+ * <p>
  * 该类使Spring底层缓存基础结构可以轻松地实现一个切面或其他任何切面系统。
- *
+ * <p>
  * 子类负责以正确的顺序调用相关方法。
- *
+ * <p>
  * 使用了设计模式中的策略模式。{@link CacheOperationSource}用于确定缓存操作，
  * {@link KeyGenerator}用于生成缓存key，{@link CacheResolver}用于解析实际
  * 使用的缓存。
- *
+ * <p>
  * 注意：缓存切面是可序列化的，但反序列化之后不执行任何缓存。
  *
  * @author Costin Leau
@@ -101,8 +83,8 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 
 	/**
-	 * Configure this aspect with the given error handler, key generator and cache resolver/manager
-	 * suppliers, applying the corresponding default if a supplier is not resolvable.
+	 * 通过给定的错误处理器，key生成器和缓存处理器/管理器supplier来配置切面，当supplier不可用时，则使用默认配置。
+	 *
 	 * @since 5.1
 	 */
 	public void configure(
@@ -117,9 +99,9 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 
 	/**
-	 * Set one or more cache operation sources which are used to find the cache
-	 * attributes. If more than one source is provided, they will be aggregated
-	 * using a {@link CompositeCacheOperationSource}.
+	 * 设置一个或多个缓存操作源，用来查询缓存参数。如果提供了多个源，则会被整合成一个
+	 * {@link CompositeCacheOperationSource}
+	 *
 	 * @see #setCacheOperationSource
 	 */
 	public void setCacheOperationSources(CacheOperationSource... cacheOperationSources) {
@@ -129,16 +111,17 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Set the CacheOperationSource for this cache aspect.
-	 * @since 5.1
+	 * 设置该缓存切面的缓存操作源CacheOperationSource
+	 *
 	 * @see #setCacheOperationSources
+	 * @since 5.1
 	 */
 	public void setCacheOperationSource(@Nullable CacheOperationSource cacheOperationSource) {
 		this.cacheOperationSource = cacheOperationSource;
 	}
 
 	/**
-	 * Return the CacheOperationSource for this cache aspect.
+	 * 返回该缓存切面的缓存操作源CacheOperationSource
 	 */
 	@Nullable
 	public CacheOperationSource getCacheOperationSource() {
@@ -146,26 +129,24 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Set the default {@link KeyGenerator} that this cache aspect should delegate to
-	 * if no specific key generator has been set for the operation.
-	 * <p>The default is a {@link SimpleKeyGenerator}.
+	 * 如果该操作没有指定特定的key生成器，设置该缓存切面需要委托的默认{@link KeyGenerator}
+	 * 默认为{@link SimpleKeyGenerator}.
 	 */
 	public void setKeyGenerator(KeyGenerator keyGenerator) {
 		this.keyGenerator = SingletonSupplier.of(keyGenerator);
 	}
 
 	/**
-	 * Return the default {@link KeyGenerator} that this cache aspect delegates to.
+	 * 返回该缓存切面委托的默认{@link KeyGenerator}
 	 */
 	public KeyGenerator getKeyGenerator() {
 		return this.keyGenerator.obtain();
 	}
 
 	/**
-	 * Set the default {@link CacheResolver} that this cache aspect should delegate
-	 * to if no specific cache resolver has been set for the operation.
-	 * <p>The default resolver resolves the caches against their names and the
-	 * default cache manager.
+	 * 如果该操作没有指定特定的缓存处理器，设置该缓存切面需要委托的默认{@link CacheResolver}
+	 * 默认处理器通过缓存名称和默认的缓存管理器来处理缓存。
+	 *
 	 * @see #setCacheManager
 	 * @see SimpleCacheResolver
 	 */
@@ -174,7 +155,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Return the default {@link CacheResolver} that this cache aspect delegates to.
+	 * 返回该缓存切面委托的{@link CacheResolver}
 	 */
 	@Nullable
 	public CacheResolver getCacheResolver() {
@@ -182,8 +163,9 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Set the {@link CacheManager} to use to create a default {@link CacheResolver}.
-	 * Replace the current {@link CacheResolver}, if any.
+	 * 设置创建默认{@link CacheResolver}的{@link CacheManager}
+	 * 如果当前存在{@link CacheResolver}，则替代它。
+	 *
 	 * @see #setCacheResolver
 	 * @see SimpleCacheResolver
 	 */
@@ -192,8 +174,8 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Set the containing {@link BeanFactory} for {@link CacheManager} and other
-	 * service lookups.
+	 * 为{@link CacheManager}和其他的服务查询设置{@link BeanFactory}
+	 *
 	 * @since 4.3
 	 */
 	@Override
@@ -215,12 +197,10 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			Assert.state(this.beanFactory != null, "CacheResolver or BeanFactory must be set on cache aspect");
 			try {
 				setCacheManager(this.beanFactory.getBean(CacheManager.class));
-			}
-			catch (NoUniqueBeanDefinitionException ex) {
+			} catch (NoUniqueBeanDefinitionException ex) {
 				throw new IllegalStateException("No CacheResolver specified, and no unique bean of type " +
 						"CacheManager found. Mark one as primary or declare a specific CacheManager to use.");
-			}
-			catch (NoSuchBeanDefinitionException ex) {
+			} catch (NoSuchBeanDefinitionException ex) {
 				throw new IllegalStateException("No CacheResolver specified, and no bean of type CacheManager found. " +
 						"Register a CacheManager bean or remove the @EnableCaching annotation from your configuration.");
 			}
@@ -230,12 +210,11 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 
 	/**
-	 * Convenience method to return a String representation of this Method
-	 * for use in logging. Can be overridden in subclasses to provide a
-	 * different identifier for the given method.
-	 * @param method the method we're interested in
-	 * @param targetClass class the method is on
-	 * @return log message identifying this method
+	 * 返回用于日志记录的该方法String表达形式的便捷方法。子类可以重写，实现特定方法的不同返回。
+	 *
+	 * @param method      感兴趣的方法
+	 * @param targetClass 方法所在类
+	 * @return 记录此方法的日志信息
 	 * @see org.springframework.util.ClassUtils#getQualifiedMethodName
 	 */
 	protected String methodIdentification(Method method, Class<?> targetClass) {
@@ -263,13 +242,13 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Return the {@link CacheOperationMetadata} for the specified operation.
-	 * <p>Resolve the {@link CacheResolver} and the {@link KeyGenerator} to be
-	 * used for the operation.
-	 * @param operation the operation
-	 * @param method the method on which the operation is invoked
-	 * @param targetClass the target type
-	 * @return the resolved metadata for the operation
+	 * 返回特定操作的{@link CacheOperationMetadata}。处理缓存中的{@link CacheResolver}
+	 * 和{@link KeyGenerator}
+	 *
+	 * @param operation   操作
+	 * @param method      调用操作的方法
+	 * @param targetClass 目标类型
+	 * @return 该操作处理的元数据
 	 */
 	protected CacheOperationMetadata getCacheOperationMetadata(
 			CacheOperation operation, Method method, Class<?> targetClass) {
@@ -280,19 +259,16 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			KeyGenerator operationKeyGenerator;
 			if (StringUtils.hasText(operation.getKeyGenerator())) {
 				operationKeyGenerator = getBean(operation.getKeyGenerator(), KeyGenerator.class);
-			}
-			else {
+			} else {
 				operationKeyGenerator = getKeyGenerator();
 			}
 			CacheResolver operationCacheResolver;
 			if (StringUtils.hasText(operation.getCacheResolver())) {
 				operationCacheResolver = getBean(operation.getCacheResolver(), CacheResolver.class);
-			}
-			else if (StringUtils.hasText(operation.getCacheManager())) {
+			} else if (StringUtils.hasText(operation.getCacheManager())) {
 				CacheManager cacheManager = getBean(operation.getCacheManager(), CacheManager.class);
 				operationCacheResolver = new SimpleCacheResolver(cacheManager);
-			}
-			else {
+			} else {
 				operationCacheResolver = getCacheResolver();
 				Assert.state(operationCacheResolver != null, "No CacheResolver/CacheManager set");
 			}
@@ -304,11 +280,11 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Return a bean with the specified name and type. Used to resolve services that
-	 * are referenced by name in a {@link CacheOperation}.
-	 * @param beanName the name of the bean, as defined by the operation
-	 * @param expectedType type for the bean
-	 * @return the bean matching that name
+	 * 返回指定名称和类型的bean。用于处理{@link CacheOperation}中通过名称引用的服务
+	 *
+	 * @param beanName     操作定义的bean名称
+	 * @param expectedType bean的类型
+	 * @return 匹配该名称的bean
 	 * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if such bean does not exist
 	 * @see CacheOperation#getKeyGenerator()
 	 * @see CacheOperation#getCacheManager()
@@ -323,7 +299,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Clear the cached metadata.
+	 * 清空缓存元数据
 	 */
 	protected void clearMetadataCache() {
 		this.metadataCache.clear();
@@ -349,13 +325,12 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Execute the underlying operation (typically in case of cache miss) and return
-	 * the result of the invocation. If an exception occurs it will be wrapped in a
-	 * {@link CacheOperationInvoker.ThrowableWrapper}: the exception can be handled
-	 * or modified but it <em>must</em> be wrapped in a
-	 * {@link CacheOperationInvoker.ThrowableWrapper} as well.
-	 * @param invoker the invoker handling the operation being cached
-	 * @return the result of the invocation
+	 * 执行底层操作（通常在缓存未命中的情况下），返回调用的结果。如果发生了异常，将会被包装在
+	 * {@link CacheOperationInvoker.ThrowableWrapper}里：异常可以被处理或修改，但是
+	 * 必须被{@link CacheOperationInvoker.ThrowableWrapper}包装。
+	 *
+	 * @param invoker 处理缓存操作的调用者
+	 * @return 调用的结果
 	 * @see CacheOperationInvoker#invoke()
 	 */
 	protected Object invokeOperation(CacheOperationInvoker invoker) {
@@ -376,14 +351,12 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 				Cache cache = context.getCaches().iterator().next();
 				try {
 					return wrapCacheValue(method, cache.get(key, () -> unwrapReturnValue(invokeOperation(invoker))));
-				}
-				catch (Cache.ValueRetrievalException ex) {
+				} catch (Cache.ValueRetrievalException ex) {
 					// The invoker wraps any Throwable in a ThrowableWrapper instance so we
 					// can just make sure that one bubbles up the stack.
 					throw (CacheOperationInvoker.ThrowableWrapper) ex.getCause();
 				}
-			}
-			else {
+			} else {
 				// No caching required, only call the underlying method
 				return invokeOperation(invoker);
 			}
@@ -411,8 +384,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			// If there are no put requests, just use the cache hit
 			cacheValue = cacheHit.get();
 			returnValue = wrapCacheValue(method, cacheValue);
-		}
-		else {
+		} else {
 			// Invoke the method if we don't have a cache hit
 			returnValue = invokeOperation(invoker);
 			cacheValue = unwrapReturnValue(returnValue);
@@ -455,8 +427,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 				if (!context.isConditionPassing(CacheOperationExpressionEvaluator.RESULT_UNAVAILABLE)) {
 					excluded.add(context);
 				}
-			}
-			catch (VariableNotAvailableException ex) {
+			} catch (VariableNotAvailableException ex) {
 				// Ignoring failure due to missing result, consider the cache put has to proceed
 			}
 		}
@@ -483,8 +454,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			if (operation.isCacheWide()) {
 				logInvalidating(context, operation, null);
 				doClear(cache, operation.isBeforeInvocation());
-			}
-			else {
+			} else {
 				if (key == null) {
 					key = generateKey(context, result);
 				}
@@ -502,10 +472,10 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Find a cached item only for {@link CacheableOperation} that passes the condition.
-	 * @param contexts the cacheable operations
-	 * @return a {@link Cache.ValueWrapper} holding the cached item,
-	 * or {@code null} if none is found
+	 * 只为满足条件的{@link CacheableOperation}查询缓存项。
+	 *
+	 * @param contexts 可缓存操作
+	 * @return 持有缓存项的{@link Cache.ValueWrapper}，如果没有找到则返回{@code null}
 	 */
 	@Nullable
 	private Cache.ValueWrapper findCachedItem(Collection<CacheOperationContext> contexts) {
@@ -516,8 +486,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 				Cache.ValueWrapper cached = findInCaches(context, key);
 				if (cached != null) {
 					return cached;
-				}
-				else {
+				} else {
 					if (logger.isTraceEnabled()) {
 						logger.trace("No cache entry for key '" + key + "' in cache(s) " + context.getCacheNames());
 					}
@@ -528,14 +497,14 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * Collect the {@link CachePutRequest} for all {@link CacheOperation} using
-	 * the specified result item.
-	 * @param contexts the contexts to handle
-	 * @param result the result item (never {@code null})
-	 * @param putRequests the collection to update
+	 * 为所有使用指定结果项的{@link CacheOperation}收集{@link CachePutRequest}
+	 *
+	 * @param contexts    处理的上下文
+	 * @param result      结果项（永不为{@code null}）
+	 * @param putRequests 更新的结果集
 	 */
 	private void collectPutRequests(Collection<CacheOperationContext> contexts,
-			@Nullable Object result, Collection<CachePutRequest> putRequests) {
+									@Nullable Object result, Collection<CachePutRequest> putRequests) {
 
 		for (CacheOperationContext context : contexts) {
 			if (isConditionPassing(context, result)) {
@@ -588,7 +557,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		private final boolean sync;
 
 		public CacheOperationContexts(Collection<? extends CacheOperation> operations, Method method,
-				Object[] args, Object target, Class<?> targetClass) {
+									  Object[] args, Object target, Class<?> targetClass) {
 
 			this.contexts = new LinkedMultiValueMap<>(operations.size());
 			for (CacheOperation op : operations) {
@@ -645,8 +614,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 
 	/**
-	 * Metadata of a cache operation that does not depend on a particular invocation
-	 * which makes it a good candidate for caching.
+	 * 不依赖于特定调用的缓存操作的元数据，这使它成为缓存的良好候选对象。
 	 */
 	protected static class CacheOperationMetadata {
 
@@ -665,7 +633,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		private final CacheResolver cacheResolver;
 
 		public CacheOperationMetadata(CacheOperation operation, Method method, Class<?> targetClass,
-				KeyGenerator keyGenerator, CacheResolver cacheResolver) {
+									  KeyGenerator keyGenerator, CacheResolver cacheResolver) {
 
 			this.operation = operation;
 			this.method = BridgeMethodResolver.findBridgedMethod(method);
@@ -680,7 +648,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 
 	/**
-	 * A {@link CacheOperationInvocationContext} context for a {@link CacheOperation}.
+	 * {@link CacheOperation}的{@link CacheOperationInvocationContext}上下文
 	 */
 	protected class CacheOperationContext implements CacheOperationInvocationContext<CacheOperation> {
 
@@ -742,8 +710,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 					EvaluationContext evaluationContext = createEvaluationContext(result);
 					this.conditionPassing = evaluator.condition(this.metadata.operation.getCondition(),
 							this.metadata.methodKey, evaluationContext);
-				}
-				else {
+				} else {
 					this.conditionPassing = true;
 				}
 			}
@@ -754,8 +721,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			String unless = "";
 			if (this.metadata.operation instanceof CacheableOperation) {
 				unless = ((CacheableOperation) this.metadata.operation).getUnless();
-			}
-			else if (this.metadata.operation instanceof CachePutOperation) {
+			} else if (this.metadata.operation instanceof CachePutOperation) {
 				unless = ((CachePutOperation) this.metadata.operation).getUnless();
 			}
 			if (StringUtils.hasText(unless)) {
@@ -766,7 +732,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		}
 
 		/**
-		 * Compute the key for the given caching operation.
+		 * 计算给定缓存操作的key
 		 */
 		@Nullable
 		protected Object generateKey(@Nullable Object result) {
