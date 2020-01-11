@@ -27,7 +27,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
- * 如果基础{@link CacheOperationSource}具有给定方法的属性，则该Pointcut匹配。
+ * 如果底层{@link CacheOperationSource}具有给定方法的属性，则匹配该Pointcut。
  *
  * @author Costin Leau
  * @author Juergen Hoeller

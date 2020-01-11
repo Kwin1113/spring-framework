@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 
 /**
- * 注册基于代理proxy-based的注解驱动annotation-driven缓存管理下Spring基础bean的配置类 {@code @Configuration}。
+ * 用于注册 实现基于代理proxy-based注解驱动annotation-driven缓存管理功能的必要Spring基础bean 的配置类 {@code @Configuration}。
  *
  * @author Chris Beams
  * @author Juergen Hoeller
