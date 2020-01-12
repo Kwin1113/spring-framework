@@ -23,8 +23,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
- * Represent an {@link AnnotatedElement} on a particular {@link Class}
- * and is suitable as a key.
+ * 表示一个特定类上的带注解的元素{@link AnnotatedElement}，可以作为key来使用
  *
  * @author Costin Leau
  * @author Stephane Nicoll
@@ -40,8 +39,7 @@ public final class AnnotatedElementKey implements Comparable<AnnotatedElementKey
 
 
 	/**
-	 * Create a new instance with the specified {@link AnnotatedElement} and
-	 * optional target {@link Class}.
+	 * 通过指定的{@link AnnotatedElement}和可选的目标类{@link Class}创建一个实例。
 	 */
 	public AnnotatedElementKey(AnnotatedElement element, @Nullable Class<?> targetClass) {
 		Assert.notNull(element, "AnnotatedElement must not be null");
