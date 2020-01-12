@@ -16,6 +16,11 @@
 
 package org.springframework.cache.concurrent;
 
+import org.springframework.cache.support.AbstractValueAdaptingCache;
+import org.springframework.core.serializer.support.SerializationDelegate;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,23 +28,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.springframework.cache.support.AbstractValueAdaptingCache;
-import org.springframework.core.serializer.support.SerializationDelegate;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-
 /**
- * Simple {@link org.springframework.cache.Cache} implementation based on the
- * core JDK {@code java.util.concurrent} package.
- *
- * <p>Useful for testing or simple caching scenarios, typically in combination
- * with {@link org.springframework.cache.support.SimpleCacheManager} or
- * dynamically through {@link ConcurrentMapCacheManager}.
- *
- * <p><b>Note:</b> As {@link ConcurrentHashMap} (the default implementation used)
- * does not allow for {@code null} values to be stored, this class will replace
- * them with a predefined internal object. This behavior can be changed through the
- * {@link #ConcurrentMapCache(String, ConcurrentMap, boolean)} constructor.
+ * {@link org.springframework.cache.Cache}的简单实现类，
+ * 基于JDK核心包{@code java.util.concurrent}实现。
+ * <p>
+ * 在测试或简单的场景下很有用，通常与{@link org.springframework.cache.support.SimpleCacheManager}
+ * 结合使用，或通过{@link ConcurrentMapCacheManager}动态使用。
+ * <p>
+ * 注意：因为{@link ConcurrentHashMap}）（默认实现使用的存储方式）不支持存储{@code null}值，
+ * 该类将用预先定义的内部类替换。但可以通过{@link #ConcurrentMapCache(String, ConcurrentMap, boolean)}
+ * 构造器选择不这么做。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
@@ -57,50 +55,50 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 
 
 	/**
-	 * Create a new ConcurrentMapCache with the specified name.
-	 * @param name the name of the cache
+	 * 通过给定的名称创建一个ConcurrentMapCache
+	 *
+	 * @param name 缓存的名称
 	 */
 	public ConcurrentMapCache(String name) {
 		this(name, new ConcurrentHashMap<>(256), true);
 	}
 
 	/**
-	 * Create a new ConcurrentMapCache with the specified name.
-	 * @param name the name of the cache
-	 * @param allowNullValues whether to accept and convert {@code null}
-	 * values for this cache
+	 * 通过给定的名称创建要给新的ConcurrentMapCache
+	 *
+	 * @param name            缓存的名称
+	 * @param allowNullValues 是否接受和转换{@code null}值
 	 */
 	public ConcurrentMapCache(String name, boolean allowNullValues) {
 		this(name, new ConcurrentHashMap<>(256), allowNullValues);
 	}
 
 	/**
-	 * Create a new ConcurrentMapCache with the specified name and the
-	 * given internal {@link ConcurrentMap} to use.
-	 * @param name the name of the cache
-	 * @param store the ConcurrentMap to use as an internal store
-	 * @param allowNullValues whether to allow {@code null} values
-	 * (adapting them to an internal null holder value)
+	 * 通过给定的名称和内部{@link ConcurrentMap}创建一个新的ConcurrentMapCache
+	 *
+	 * @param name            缓存名称
+	 * @param store           用于内部存储的ConcurrentMap
+	 * @param allowNullValues 是否接受和转换{@code null}值
 	 */
 	public ConcurrentMapCache(String name, ConcurrentMap<Object, Object> store, boolean allowNullValues) {
 		this(name, store, allowNullValues, null);
 	}
 
 	/**
-	 * Create a new ConcurrentMapCache with the specified name and the
-	 * given internal {@link ConcurrentMap} to use. If the
-	 * {@link SerializationDelegate} is specified,
-	 * {@link #isStoreByValue() store-by-value} is enabled
-	 * @param name the name of the cache
-	 * @param store the ConcurrentMap to use as an internal store
-	 * @param allowNullValues whether to allow {@code null} values
-	 * (adapting them to an internal null holder value)
-	 * @param serialization the {@link SerializationDelegate} to use
-	 * to serialize cache entry or {@code null} to store the reference
+	 * 通过给定的名称和内部{@link ConcurrentMap}创建一个新的ConcurrentMapCache
+	 * 如果指定了{@link SerializationDelegate},则开启
+	 * {@link #isStoreByValue() store-by-value}
+	 *
+	 * @param name            缓存名称
+	 * @param store           用于内部存储的ConcurrentMap
+	 * @param allowNullValues 是否接受和转换{@code null}值
+	 *                        (将他们兼容成内部持有null的值)
+	 * @param serialization   使用的{@link SerializationDelegate}，用于序列化缓存键值对
+	 *                        或{@code null}存储引用
 	 * @since 4.3
 	 */
 	protected ConcurrentMapCache(String name, ConcurrentMap<Object, Object> store,
-			boolean allowNullValues, @Nullable SerializationDelegate serialization) {
+								 boolean allowNullValues, @Nullable SerializationDelegate serialization) {
 
 		super(allowNullValues);
 		Assert.notNull(name, "Name must not be null");
@@ -112,9 +110,9 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 
 
 	/**
-	 * Return whether this cache stores a copy of each entry ({@code true}) or
-	 * a reference ({@code false}, default). If store by value is enabled, each
-	 * entry in the cache must be serializable.
+	 * 返回缓存存储是存储每个键值对的副本（{@code true}）还是存储应用（{@code false}，默认）。
+	 * 如果存储副本则需要序列化每个键值对。
+	 *
 	 * @since 4.3
 	 */
 	public final boolean isStoreByValue() {
@@ -144,8 +142,7 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 		return (T) fromStoreValue(this.store.computeIfAbsent(key, k -> {
 			try {
 				return toStoreValue(valueLoader.call());
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				throw new ValueRetrievalException(key, valueLoader, ex);
 			}
 		}));
@@ -191,13 +188,11 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 		if (this.serialization != null) {
 			try {
 				return serializeValue(this.serialization, storeValue);
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				throw new IllegalArgumentException("Failed to serialize cache value '" + userValue +
 						"'. Does it implement Serializable?", ex);
 			}
-		}
-		else {
+		} else {
 			return storeValue;
 		}
 	}
@@ -207,8 +202,7 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 		try {
 			serialization.serialize(storeValue, out);
 			return out.toByteArray();
-		}
-		finally {
+		} finally {
 			out.close();
 		}
 	}
@@ -218,12 +212,10 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 		if (storeValue != null && this.serialization != null) {
 			try {
 				return super.fromStoreValue(deserializeValue(this.serialization, storeValue));
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				throw new IllegalArgumentException("Failed to deserialize cache value '" + storeValue + "'", ex);
 			}
-		}
-		else {
+		} else {
 			return super.fromStoreValue(storeValue);
 		}
 
@@ -233,8 +225,7 @@ public class ConcurrentMapCache extends AbstractValueAdaptingCache {
 		ByteArrayInputStream in = new ByteArrayInputStream((byte[]) storeValue);
 		try {
 			return serialization.deserialize(in);
-		}
-		finally {
+		} finally {
 			in.close();
 		}
 	}

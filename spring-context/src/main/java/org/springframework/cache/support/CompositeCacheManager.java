@@ -43,6 +43,7 @@ import java.util.*;
  */
 public class CompositeCacheManager implements CacheManager, InitializingBean {
 
+	//管理CacheManager的集合
 	private final List<CacheManager> cacheManagers = new ArrayList<>();
 
 	private boolean fallbackToNoOpCache = false;
@@ -81,6 +82,7 @@ public class CompositeCacheManager implements CacheManager, InitializingBean {
 		this.fallbackToNoOpCache = fallbackToNoOpCache;
 	}
 
+	//如果fallbackToNoOpCache=true，在bean初始化之后，在管理的CacheManager集合最后添加一个NoOpCacheManager
 	@Override
 	public void afterPropertiesSet() {
 		if (this.fallbackToNoOpCache) {

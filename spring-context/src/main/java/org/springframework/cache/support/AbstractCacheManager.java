@@ -40,6 +40,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public abstract class AbstractCacheManager implements CacheManager, InitializingBean {
 
+	//存放缓存的集合
 	private final ConcurrentMap<String, Cache> cacheMap = new ConcurrentHashMap<>(16);
 
 	private volatile Set<String> cacheNames = Collections.emptySet();
@@ -55,22 +56,30 @@ public abstract class AbstractCacheManager implements CacheManager, Initializing
 	/**
 	 * 初始化缓存的静态配置。
 	 * 启动时通过{@link #afterPropertiesSet()}触发；也能在运行时通过调用再初始化re-initialize。
+	 * <p>
+	 * 模板方法模式。
 	 *
 	 * @see #loadCaches()
 	 * @since 4.2.2
 	 */
 	public void initializeCaches() {
+		//加载缓存管理器CacheManager里的缓存
 		Collection<? extends Cache> caches = loadCaches();
 
 		synchronized (this.cacheMap) {
+			//初始化先都置空
 			this.cacheNames = Collections.emptySet();
 			this.cacheMap.clear();
+
 			Set<String> cacheNames = new LinkedHashSet<>(caches.size());
+
+			//循环填满该CacheManager所管理的缓存
 			for (Cache cache : caches) {
 				String name = cache.getName();
 				this.cacheMap.put(name, decorateCache(cache));
 				cacheNames.add(name);
 			}
+			//最后设置成不可便
 			this.cacheNames = Collections.unmodifiableSet(cacheNames);
 		}
 	}
@@ -89,20 +98,25 @@ public abstract class AbstractCacheManager implements CacheManager, Initializing
 	@Nullable
 	public Cache getCache(String name) {
 		// 快速检查已存在的缓存
+		//在初始化之后的缓存集合Map里按名称查询
 		Cache cache = this.cacheMap.get(name);
 		if (cache != null) {
+			//查询到了直接返回
 			return cache;
 		}
 
 		// 提供者可能支持缓存按需创建
+
 		Cache missingCache = getMissingCache(name);
 		if (missingCache != null) {
 			// 注册未命中缓存时完全同步
 			synchronized (this.cacheMap) {
 				cache = this.cacheMap.get(name);
 				if (cache == null) {
+					//getMissingCache默认直接返回null，交给子类实现
 					cache = decorateCache(missingCache);
 					this.cacheMap.put(name, cache);
+					//添加一个cache
 					updateCacheNames(name);
 				}
 			}
@@ -152,7 +166,7 @@ public abstract class AbstractCacheManager implements CacheManager, Initializing
 
 	/**
 	 * 通过给定的名称更新暴露的{@link #cacheNames}集合。
-	 *
+	 * <p>
 	 * 该方法始终在完整的{@link #cacheMap}锁内调用，有效地表现的和
 	 * {@code CopyOnWriteArraySet}一样，但是作为一个不可修改的引用暴露。
 	 *

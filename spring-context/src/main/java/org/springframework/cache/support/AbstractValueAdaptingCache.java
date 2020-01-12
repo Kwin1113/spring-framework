@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
  */
 public abstract class AbstractValueAdaptingCache implements Cache {
 
+	//是否允许保存null
 	private final boolean allowNullValues;
 
 
@@ -62,6 +63,7 @@ public abstract class AbstractValueAdaptingCache implements Cache {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <T> T get(Object key, @Nullable Class<T> type) {
+		//处理一下查询出来的包装类
 		Object value = fromStoreValue(lookup(key));
 		if (value != null && type != null && !type.isInstance(value)) {
 			throw new IllegalStateException(

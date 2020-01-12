@@ -27,6 +27,7 @@ import org.springframework.util.Assert;
 /**
  * 通过迭代给定的{@code CacheOperationSource}实例数组组合{@link CacheOperationSource}
  * 的实现类。
+ * 组合模式。
  *
  * @author Costin Leau
  * @author Juergen Hoeller

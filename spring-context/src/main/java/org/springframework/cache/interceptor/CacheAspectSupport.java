@@ -192,6 +192,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 	@Override
 	public void afterSingletonsInstantiated() {
+		//如果没有设置CacheResolver，则去那CacheMangager
 		if (getCacheResolver() == null) {
 			// Lazily initialize cache resolver via default cache manager...
 			Assert.state(this.beanFactory != null, "CacheResolver or BeanFactory must be set on cache aspect");
@@ -236,8 +237,9 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 	protected CacheOperationContext getOperationContext(
 			CacheOperation operation, Method method, Object[] args, Object target, Class<?> targetClass) {
-
+		//用入参生成元数据
 		CacheOperationMetadata metadata = getCacheOperationMetadata(operation, method, targetClass);
+		//再生成上下文
 		return new CacheOperationContext(metadata, args, target);
 	}
 
@@ -256,22 +258,28 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		CacheOperationCacheKey cacheKey = new CacheOperationCacheKey(operation, method, targetClass);
 		CacheOperationMetadata metadata = this.metadataCache.get(cacheKey);
 		if (metadata == null) {
+			//从缓存操作的配置中获取KeyGenerator
 			KeyGenerator operationKeyGenerator;
 			if (StringUtils.hasText(operation.getKeyGenerator())) {
 				operationKeyGenerator = getBean(operation.getKeyGenerator(), KeyGenerator.class);
 			} else {
 				operationKeyGenerator = getKeyGenerator();
 			}
+			//从缓存操作的配置中获取CacheResolver
 			CacheResolver operationCacheResolver;
 			if (StringUtils.hasText(operation.getCacheResolver())) {
 				operationCacheResolver = getBean(operation.getCacheResolver(), CacheResolver.class);
 			} else if (StringUtils.hasText(operation.getCacheManager())) {
+				//没有的话获取CacheManager
 				CacheManager cacheManager = getBean(operation.getCacheManager(), CacheManager.class);
 				operationCacheResolver = new SimpleCacheResolver(cacheManager);
 			} else {
+				//再没有就使用默认
 				operationCacheResolver = getCacheResolver();
 				Assert.state(operationCacheResolver != null, "No CacheResolver/CacheManager set");
 			}
+
+			//东西都取出来之后封装成metadata
 			metadata = new CacheOperationMetadata(operation, method, targetClass,
 					operationKeyGenerator, operationCacheResolver);
 			this.metadataCache.put(cacheKey, metadata);
@@ -306,15 +314,28 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		this.evaluator.clear();
 	}
 
+	/**
+	 * TODO 核心方法
+	 * 执行目标方法 + 缓存操作
+	 *
+	 * @param invoker
+	 * @param target
+	 * @param method
+	 * @param args
+	 * @return
+	 */
 	@Nullable
 	protected Object execute(CacheOperationInvoker invoker, Object target, Method method, Object[] args) {
 		// Check whether aspect is enabled (to cope with cases where the AJ is pulled in automatically)
+		//已经初始化CacheResolver了
 		if (this.initialized) {
+			//拿到目标原始Class
 			Class<?> targetClass = getTargetClass(target);
 			CacheOperationSource cacheOperationSource = getCacheOperationSource();
 			if (cacheOperationSource != null) {
 				Collection<CacheOperation> operations = cacheOperationSource.getCacheOperations(method, targetClass);
 				if (!CollectionUtils.isEmpty(operations)) {
+					//将缓存操作进行执行
 					return execute(invoker, method,
 							new CacheOperationContexts(operations, method, args, target, targetClass));
 				}
@@ -344,6 +365,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	@Nullable
 	private Object execute(final CacheOperationInvoker invoker, Method method, CacheOperationContexts contexts) {
 		// Special handling of synchronized invocation
+		//如果需要同步执行
 		if (contexts.isSynchronized()) {
 			CacheOperationContext context = contexts.get(CacheableOperation.class).iterator().next();
 			if (isConditionPassing(context, CacheOperationExpressionEvaluator.NO_RESULT)) {
@@ -362,15 +384,19 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			}
 		}
 
+		//不需要同步
 
 		// Process any early evictions
+		//先处理@CacheEvict注解
 		processCacheEvicts(contexts.get(CacheEvictOperation.class), true,
 				CacheOperationExpressionEvaluator.NO_RESULT);
 
 		// Check if we have a cached item matching the conditions
+		//查看@Cacheable是否命中缓存
 		Cache.ValueWrapper cacheHit = findCachedItem(contexts.get(CacheableOperation.class));
 
 		// Collect puts from any @Cacheable miss, if no cached item is found
+		//如果缓存未命中，则准备一个CachePutRequest集合
 		List<CachePutRequest> cachePutRequests = new LinkedList<>();
 		if (cacheHit == null) {
 			collectPutRequests(contexts.get(CacheableOperation.class),
@@ -382,23 +408,28 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 		if (cacheHit != null && !hasCachePut(contexts)) {
 			// If there are no put requests, just use the cache hit
+			//缓存命中，并且上下文集合中没有其他的CachePut操作，返回值直接用命中的缓存值
 			cacheValue = cacheHit.get();
 			returnValue = wrapCacheValue(method, cacheValue);
 		} else {
 			// Invoke the method if we don't have a cache hit
+			//如果缓存未命中，调用方法
 			returnValue = invokeOperation(invoker);
 			cacheValue = unwrapReturnValue(returnValue);
 		}
 
 		// Collect any explicit @CachePuts
+		//收集所有明确声明的@CachePut
 		collectPutRequests(contexts.get(CachePutOperation.class), cacheValue, cachePutRequests);
 
 		// Process any collected put requests, either from @CachePut or a @Cacheable miss
+		//执行所有CachePut操作，不管是未命中的@Cacheable或者@CachePut
 		for (CachePutRequest cachePutRequest : cachePutRequests) {
 			cachePutRequest.apply(cacheValue);
 		}
 
 		// Process any late evictions
+		//执行方法之后的缓存移除操作
 		processCacheEvicts(contexts.get(CacheEvictOperation.class), false, cacheValue);
 
 		return returnValue;
@@ -418,12 +449,20 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		return ObjectUtils.unwrapOptional(returnValue);
 	}
 
+	/**
+	 * 上下文集合中是否含有CachePut的上下文
+	 * @param contexts 上下文集合
+	 * @return 是否含有CachePut上下文
+	 */
 	private boolean hasCachePut(CacheOperationContexts contexts) {
 		// Evaluate the conditions *without* the result object because we don't have it yet...
+		//取出所有CachePut操作
 		Collection<CacheOperationContext> cachePutContexts = contexts.get(CachePutOperation.class);
+		//该集合用于之后判断不满足condition条件的CachePut操作
 		Collection<CacheOperationContext> excluded = new ArrayList<>();
 		for (CacheOperationContext context : cachePutContexts) {
 			try {
+				//不满足condition条件的CachePut操作放到excluded集合里
 				if (!context.isConditionPassing(CacheOperationExpressionEvaluator.RESULT_UNAVAILABLE)) {
 					excluded.add(context);
 				}
@@ -432,14 +471,18 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			}
 		}
 		// Check if all puts have been excluded by condition
+		//只要两个集合数量不相等，说明有需要处理的CachePut操作（cachePutContexts集合一定是大于excluded集合的）
 		return (cachePutContexts.size() != excluded.size());
 	}
 
 	private void processCacheEvicts(
 			Collection<CacheOperationContext> contexts, boolean beforeInvocation, @Nullable Object result) {
-
+		//循环处理移除操作
 		for (CacheOperationContext context : contexts) {
+			//因为是按照CacheEvictOperation取出来的，所以可以直接转型成CacheEvictOperation操作
 			CacheEvictOperation operation = (CacheEvictOperation) context.metadata.operation;
+
+			//如果需要在方法调用之前执行移除并且condition条件满足
 			if (beforeInvocation == operation.isBeforeInvocation() && isConditionPassing(context, result)) {
 				performCacheEvict(context, operation, result);
 			}
@@ -448,17 +491,20 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 	private void performCacheEvict(
 			CacheOperationContext context, CacheEvictOperation operation, @Nullable Object result) {
-
+		//从上下文中获取所有缓存，循环进行操作
 		Object key = null;
 		for (Cache cache : context.getCaches()) {
 			if (operation.isCacheWide()) {
+				//如果是清除整个缓存
 				logInvalidating(context, operation, null);
 				doClear(cache, operation.isBeforeInvocation());
 			} else {
+				//否则清除一个key
 				if (key == null) {
 					key = generateKey(context, result);
 				}
 				logInvalidating(context, operation, key);
+				//因为是在其他操作之前执行的，所以需要马上移除缓存，避免影响后面的缓存操作
 				doEvict(cache, key, operation.isBeforeInvocation());
 			}
 		}
@@ -472,7 +518,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 	/**
-	 * 只为满足条件的{@link CacheableOperation}查询缓存项。
+	 * 查询满足条件的{@link CacheableOperation}缓存
 	 *
 	 * @param contexts 可缓存操作
 	 * @return 持有缓存项的{@link Cache.ValueWrapper}，如果没有找到则返回{@code null}
@@ -482,7 +528,9 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		Object result = CacheOperationExpressionEvaluator.NO_RESULT;
 		for (CacheOperationContext context : contexts) {
 			if (isConditionPassing(context, result)) {
+				//循环满足condition条件的上下文，生成key
 				Object key = generateKey(context, result);
+				//在缓存中查询该key对应的缓存
 				Cache.ValueWrapper cached = findInCaches(context, key);
 				if (cached != null) {
 					return cached;
@@ -505,9 +553,9 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	 */
 	private void collectPutRequests(Collection<CacheOperationContext> contexts,
 									@Nullable Object result, Collection<CachePutRequest> putRequests) {
-
 		for (CacheOperationContext context : contexts) {
 			if (isConditionPassing(context, result)) {
+				//循环满足条件的缓存操作上下文，并生成一个CachePutRequest放入集合
 				Object key = generateKey(context, result);
 				putRequests.add(new CachePutRequest(context, key));
 			}
@@ -517,6 +565,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	@Nullable
 	private Cache.ValueWrapper findInCaches(CacheOperationContext context, Object key) {
 		for (Cache cache : context.getCaches()) {
+			//去除上下文中的所有cache，做doGet操作
 			Cache.ValueWrapper wrapper = doGet(cache, key);
 			if (wrapper != null) {
 				if (logger.isTraceEnabled()) {
@@ -550,10 +599,15 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 	}
 
 
+	/**
+	 * 缓存操作的上下文集合，比如说一个类或方法上有多个注解
+	 */
 	private class CacheOperationContexts {
 
+		//key是CacheOperation的那几个子类类型
 		private final MultiValueMap<Class<? extends CacheOperation>, CacheOperationContext> contexts;
 
+		//是否需要同步执行，默认false
 		private final boolean sync;
 
 		public CacheOperationContexts(Collection<? extends CacheOperation> operations, Method method,
@@ -563,11 +617,14 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			for (CacheOperation op : operations) {
 				this.contexts.add(op.getClass(), getOperationContext(op, method, args, target, targetClass));
 			}
+			//直接通过给定参数算出来能不能同步
 			this.sync = determineSyncFlag(method);
 		}
 
+		//获取某个类型的缓存操作（一般来说就是那三大类）
 		public Collection<CacheOperationContext> get(Class<? extends CacheOperation> operationClass) {
 			Collection<CacheOperationContext> result = this.contexts.get(operationClass);
+			//不存在则返回空集合
 			return (result != null ? result : Collections.emptyList());
 		}
 
@@ -575,33 +632,42 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 			return this.sync;
 		}
 
+		//计算sync
 		private boolean determineSyncFlag(Method method) {
+			//获取该缓存上下文集合中的所有Cacheable操作，因为只有这个操作才有sync属性
 			List<CacheOperationContext> cacheOperationContexts = this.contexts.get(CacheableOperation.class);
-			if (cacheOperationContexts == null) {  // no @Cacheable operation at all
+			if (cacheOperationContexts == null) {  // no @Cacheable operation at all 根本没有缓存操作
 				return false;
 			}
 			boolean syncEnabled = false;
+			//只要有一个Cacheable操作需要同步就跳出
 			for (CacheOperationContext cacheOperationContext : cacheOperationContexts) {
 				if (((CacheableOperation) cacheOperationContext.getOperation()).isSync()) {
 					syncEnabled = true;
 					break;
 				}
 			}
+			//需要同步
 			if (syncEnabled) {
+				//但是如果有多个操作上下文还需要同步就不行，直接报错
 				if (this.contexts.size() > 1) {
 					throw new IllegalStateException(
 							"@Cacheable(sync=true) cannot be combined with other cache operations on '" + method + "'");
 				}
+				//只能有一个Cacheable操作的情况下sync才能生效，直接报错
 				if (cacheOperationContexts.size() > 1) {
 					throw new IllegalStateException(
 							"Only one @Cacheable(sync=true) entry is allowed on '" + method + "'");
 				}
+				//筛选下来只有一个Cacheable操作
 				CacheOperationContext cacheOperationContext = cacheOperationContexts.iterator().next();
 				CacheableOperation operation = (CacheableOperation) cacheOperationContext.getOperation();
+				//如果设置了sync=true，不能设置多个缓存，直接报错
 				if (cacheOperationContext.getCaches().size() > 1) {
 					throw new IllegalStateException(
 							"@Cacheable(sync=true) only allows a single cache on '" + operation + "'");
 				}
+				//sync=true时不支持unless属性，直接报错
 				if (StringUtils.hasText(operation.getUnless())) {
 					throw new IllegalStateException(
 							"@Cacheable(sync=true) does not support unless attribute on '" + operation + "'");
@@ -779,6 +845,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 		public void apply(@Nullable Object result) {
 			if (this.context.canPutToCache(result)) {
+				//判断一下unless条件再执行doPut操作
 				for (Cache cache : this.context.getCaches()) {
 					doPut(cache, this.key, result);
 				}

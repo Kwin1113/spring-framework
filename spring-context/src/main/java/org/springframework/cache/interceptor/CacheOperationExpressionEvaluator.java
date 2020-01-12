@@ -56,6 +56,7 @@ class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 	/**
 	 * 持有结果对象的变量名称。
+	 * todo 该对象是否是存入缓存的结果
 	 */
 	public static final String RESULT_VARIABLE = "result";
 
@@ -81,6 +82,7 @@ class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 			Method method, Object[] args, Object target, Class<?> targetClass, Method targetMethod,
 			@Nullable Object result, @Nullable BeanFactory beanFactory) {
 
+		//表达式中的root对象
 		CacheExpressionRootObject rootObject = new CacheExpressionRootObject(
 				caches, method, args, target, targetClass);
 		CacheEvaluationContext evaluationContext = new CacheEvaluationContext(

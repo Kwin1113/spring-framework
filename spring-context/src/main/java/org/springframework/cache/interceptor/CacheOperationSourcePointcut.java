@@ -16,15 +16,15 @@
 
 package org.springframework.cache.interceptor;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.cache.CacheManager;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
 
 /**
  * 如果底层{@link CacheOperationSource}具有给定方法的属性，则匹配该Pointcut。
@@ -86,9 +86,11 @@ abstract class CacheOperationSourcePointcut extends StaticMethodMatcherPointcut 
 
 		@Override
 		public boolean matches(Class<?> clazz) {
+			//如果切入点的类是个CacheManager，不切入
 			if (CacheManager.class.isAssignableFrom(clazz)) {
 				return false;
 			}
+			//获取当前的缓存属性源
 			CacheOperationSource cas = getCacheOperationSource();
 			return (cas == null || cas.isCandidateClass(clazz));
 		}

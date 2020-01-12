@@ -36,6 +36,9 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractCacheResolver implements CacheResolver, InitializingBean {
 
+	/**
+	 * 依赖于CacheManager
+	 */
 	@Nullable
 	private CacheManager cacheManager;
 
@@ -73,6 +76,9 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 		return this.cacheManager;
 	}
 
+	/**
+	 * 验证CacheManager必须存在
+	 */
 	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(this.cacheManager, "CacheManager is required");
@@ -86,6 +92,7 @@ public abstract class AbstractCacheResolver implements CacheResolver, Initializi
 			return Collections.emptyList();
 		}
 		Collection<Cache> result = new ArrayList<>(cacheNames.size());
+		//根据缓存名称从缓存管理器CacheManager中获取缓存
 		for (String cacheName : cacheNames) {
 			Cache cache = getCacheManager().getCache(cacheName);
 			if (cache == null) {
