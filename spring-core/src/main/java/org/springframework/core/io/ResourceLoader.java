@@ -20,17 +20,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 /**
- * Strategy interface for loading resources (e.. class path or file system
- * resources). An {@link org.springframework.context.ApplicationContext}
- * is required to provide this functionality, plus extended
- * {@link org.springframework.core.io.support.ResourcePatternResolver} support.
+ * 加载资源的策略接口（例如：classpath或文件系统file system下的资源）
+ * 该功能需要{@link org.springframework.context.ApplicationContext}以及扩展的
+ * {@link org.springframework.core.io.support.ResourcePatternResolver}支持
  *
- * <p>{@link DefaultResourceLoader} is a standalone implementation that is
- * usable outside an ApplicationContext, also used by {@link ResourceEditor}.
+ * {@link DefaultResourceLoader}是一个独立的实现类，可以在ApplicationContext外部
+ * 使用，也可以由{@link ResourceEditor}使用
  *
- * <p>Bean properties of type Resource and Resource array can be populated
- * from Strings when running in an ApplicationContext, using the particular
- * context's resource loading strategy.
+ * 当在ApplicationContext中运行时，可以使用特定的上下文资源加载策略从字符串中获取
+ * 资源类型和资源数组的Bean属性
  *
  * @author Juergen Hoeller
  * @since 10.03.2004
@@ -41,25 +39,23 @@ import org.springframework.util.ResourceUtils;
  */
 public interface ResourceLoader {
 
-	/** Pseudo URL prefix for loading from the class path: "classpath:". */
+	/** 从类路径"classpath:"加载的伪URL前缀 */
 	String CLASSPATH_URL_PREFIX = ResourceUtils.CLASSPATH_URL_PREFIX;
 
 
 	/**
-	 * Return a Resource handle for the specified resource location.
-	 * <p>The handle should always be a reusable resource descriptor,
-	 * allowing for multiple {@link Resource#getInputStream()} calls.
+	 * 返回指定资源位置的资源句柄。句柄必须是一个可重用的资源描述符，允许多个
+	 * {@link Resource#getInputStream()}调用
 	 * <p><ul>
-	 * <li>Must support fully qualified URLs, e.g. "file:C:/test.dat".
-	 * <li>Must support classpath pseudo-URLs, e.g. "classpath:test.dat".
-	 * <li>Should support relative file paths, e.g. "WEB-INF/test.dat".
-	 * (This will be implementation-specific, typically provided by an
-	 * ApplicationContext implementation.)
+	 * <li>必须支持完整的合法URL，如："file:C:/test.dat"
+	 * <li>必须支持类路径的伪URL，如："classpath:test.dat"
+	 * <li>应该支持相对文件路径，如："WEB-INF/test.dat".
+	 * (该方法特定于实现类，通常有ApplicationContext实现提供)
 	 * </ul>
-	 * <p>Note that a Resource handle does not imply an existing resource;
-	 * you need to invoke {@link Resource#exists} to check for existence.
-	 * @param location the resource location
-	 * @return a corresponding Resource handle (never {@code null})
+	 * <p>注意，资源句柄并不意味着资源一定存在；你需要调用{@link Resource#exists}
+	 * 来检查资源是否存在
+	 * @param location 资源路径
+	 * @return 相应的资源句柄(never {@code null})
 	 * @see #CLASSPATH_URL_PREFIX
 	 * @see Resource#exists()
 	 * @see Resource#getInputStream()
@@ -67,11 +63,10 @@ public interface ResourceLoader {
 	Resource getResource(String location);
 
 	/**
-	 * Expose the ClassLoader used by this ResourceLoader.
-	 * <p>Clients which need to access the ClassLoader directly can do so
-	 * in a uniform manner with the ResourceLoader, rather than relying
-	 * on the thread context ClassLoader.
-	 * @return the ClassLoader
+	 * 返回该资源加载器ResourceLoader使用的类加载器ClassLoader
+	 * <p>需要直接访问ClassLoader的客户端可以使用ResourceLoader以统一的方式进行操作，
+	 * 而不是依赖于线程上下文ClassLoader
+	 * @return 类加载器ClassLoader
 	 * (only {@code null} if even the system ClassLoader isn't accessible)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 * @see org.springframework.util.ClassUtils#forName(String, ClassLoader)
