@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 /**
  * {@code NamespaceHandler} 允许使用XML或注解的方式配置声明式缓存管理。
  *
- * 这个命名空间处理器时Spring缓存管理功能中的核心。
+ * 这个命名空间处理器是Spring缓存管理功能中的核心。
  *
  * @author Costin Leau
  * @since 3.1

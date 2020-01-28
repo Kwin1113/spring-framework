@@ -24,18 +24,16 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.lang.Nullable;
 
 /**
- * Base class for those {@link BeanDefinitionParser} implementations that
- * need to parse and define just a <i>single</i> {@code BeanDefinition}.
+ * 需要解析并定义单例{@code BeanDefinition}的{@link BeanDefinitionParser}实现类的基础类
  *
- * <p>Extend this parser class when you want to create a single bean definition
- * from an arbitrarily complex XML element. You may wish to consider extending
- * the {@link AbstractSimpleBeanDefinitionParser} when you want to create a
- * single bean definition from a relatively simple custom XML element.
+ * 如果你想要从任意的复杂的XML元素中解析一个单例single的bean定义，请扩展该解析器。
+ * 如果你想要从一个相对简单的自定义XML元素中解析一个单例single的bean定义，你可以考虑扩展
+ * {@link AbstractSimpleBeanDefinitionParser}
  *
- * <p>The resulting {@code BeanDefinition} will be automatically registered
- * with the {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}.
- * Your job simply is to {@link #doParse parse} the custom XML {@link Element}
- * into a single {@code BeanDefinition}.
+ * {@code BeanDefinition}结果将自动注册
+ * {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}。
+ * 你需要做的仅仅是通过{@link #doParse parse}方法把自定义的XML元素{@link Element}
+ * 解析成一个单例single的{@code BeanDefinition}
  *
  * @author Rob Harrop
  * @author Juergen Hoeller

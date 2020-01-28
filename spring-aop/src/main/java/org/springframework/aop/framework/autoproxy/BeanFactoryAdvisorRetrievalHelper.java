@@ -31,8 +31,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Helper for retrieving standard Spring Advisors from a BeanFactory,
- * for use with auto-proxying.
+ * 从Bean工厂中检索标准Spring增强器的工具类，增强器用于自动代理。
  *
  * @author Juergen Hoeller
  * @since 2.0.2

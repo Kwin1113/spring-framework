@@ -22,14 +22,13 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.lang.Nullable;
 
 /**
- * Interface used by the {@link DefaultBeanDefinitionDocumentReader} to handle custom,
- * top-level (directly under {@code <beans/>}) tags.
+ * {@link DefaultBeanDefinitionDocumentReader}用于处理自定义顶级
+ * （直接在{@code <beans />}下）标记的接口。
  *
- * <p>Implementations are free to turn the metadata in the custom tag into as many
- * {@link BeanDefinition BeanDefinitions} as required.
+ * <p>实现类可以轻松的实现把自定义tag中的元数据转换成所需数量的
+ * {@link BeanDefinition BeanDefinitions}
  *
- * <p>The parser locates a {@link BeanDefinitionParser} from the associated
- * {@link NamespaceHandler} for the namespace in which the custom tag resides.
+ * <p>解析起会从自定义tag所在的关联命名空间中定位到{@link BeanDefinitionParser}
  *
  * @author Rob Harrop
  * @since 2.0
@@ -39,18 +38,17 @@ import org.springframework.lang.Nullable;
 public interface BeanDefinitionParser {
 
 	/**
-	 * Parse the specified {@link Element} and register the resulting
-	 * {@link BeanDefinition BeanDefinition(s)} with the
+	 * 解析给定的{@link Element}，并且将所得的{@link BeanDefinition BeanDefinition(s)}
+	 * 通过提供的{@link ParserContext}中的
 	 * {@link org.springframework.beans.factory.xml.ParserContext#getRegistry() BeanDefinitionRegistry}
-	 * embedded in the supplied {@link ParserContext}.
-	 * <p>Implementations must return the primary {@link BeanDefinition} that results
-	 * from the parse if they will ever be used in a nested fashion (for example as
-	 * an inner tag in a {@code <property/>} tag). Implementations may return
-	 * {@code null} if they will <strong>not</strong> be used in a nested fashion.
-	 * @param element the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}
-	 * @param parserContext the object encapsulating the current state of the parsing process;
-	 * provides access to a {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
-	 * @return the primary {@link BeanDefinition}
+	 * 方法注册到其中
+	 * <p>如果实现类将以嵌套方式使用（例如，作为{@code <property />}标记中的内部标记），
+	 * 则实现必须返回解析产生的主要{@link BeanDefinition}。
+	 * 当实现类不以嵌套方式使用时，方法可能返回{@code null}
+	 * @param element 给定的元素，可能被解析为一个或多个{@link BeanDefinition BeanDefinitions}
+	 * @param parserContext 封装当前解析进程的对象；提供
+	 * {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}的连接
+	 * @return 主要的{@link BeanDefinition}
 	 */
 	@Nullable
 	BeanDefinition parse(Element element, ParserContext parserContext);

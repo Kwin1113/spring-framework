@@ -34,17 +34,17 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * bean根定义，表示合并merged bean定义，该bean支持Spring BeanFactory中运行时的特定bean。
  * A root bean definition represents the merged bean definition that backs
- * a specific bean in a Spring BeanFactory at runtime. It might have been created
- * from multiple original bean definitions that inherit from each other,
- * typically registered as {@link GenericBeanDefinition GenericBeanDefinitions}.
- * A root bean definition is essentially the 'unified' bean definition view at runtime.
+ * a specific bean in a Spring BeanFactory at runtime.
+ * 它可能是由多个相互继承的原始bean定义创建的，通常定义为
+ * {@link GenericBeanDefinition GenericBeanDefinitions}。
+ * bean根定义实质上在运行时看来，是一个统一'unified'bean定义
  *
- * <p>Root bean definitions may also be used for registering individual bean definitions
- * in the configuration phase. However, since Spring 2.5, the preferred way to register
- * bean definitions programmatically is the {@link GenericBeanDefinition} class.
- * GenericBeanDefinition has the advantage that it allows to dynamically define
- * parent dependencies, not 'hard-coding' the role as a root bean definition.
+ * bean根定义也能用于在配置解析阶段注册独立的bean定义。但是，从Spring 2.5开始，
+ * 更推荐通过{@link GenericBeanDefinition}类来编程式注册bean定义。
+ * 通用Bean定义（GenericBeanDefinition）拥有允许动态定义父类依赖的优点，而不是通过'硬编码'
+ * 的方式定义角色为bean根定义。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -60,7 +60,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
-	/** Determines if the definition needs to be re-merged. */
+	/** 决定该定义是否需要被再次合并re-merged */
 	volatile boolean stale;
 
 	boolean allowCaching = true;
@@ -70,19 +70,19 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	volatile ResolvableType targetType;
 
-	/** Package-visible field for caching the determined Class of a given bean definition. */
+	/** 用于缓存给定bean定义的类的变量，该变量包内可见 */
 	@Nullable
 	volatile Class<?> resolvedTargetType;
 
-	/** Package-visible field for caching if the bean is a factory bean. */
+	/** 用于缓存该bean是否是工厂bean的变量，该变量包内可见 */
 	@Nullable
 	volatile Boolean isFactoryBean;
 
-	/** Package-visible field for caching the return type of a generically typed factory method. */
+	/** 用于缓存通用类型的工厂方法的返回类型的变量，该变量包内可见 */
 	@Nullable
 	volatile ResolvableType factoryMethodReturnType;
 
-	/** Package-visible field for caching a unique factory method candidate for introspection. */
+	/** 用于缓存唯一的工厂方法供内省的变量，该变量包内可见. */
 	@Nullable
 	volatile Method factoryMethodToIntrospect;
 
@@ -210,10 +210,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
-	 * Create a new RootBeanDefinition for a singleton,
-	 * providing constructor arguments and property values.
-	 * <p>Takes a bean class name to avoid eager loading of the bean class.
-	 * @param beanClassName the name of the class to instantiate
+	 * 创建一个新的单例RootBeanDefinition，提供合适的
+	 * 构造参数和属性值
+	 * 采用bean类名称，避免饥饿加载（eager loading）bean类。
+	 * @param beanClassName 初始化类的名称
 	 */
 	public RootBeanDefinition(String beanClassName) {
 		setBeanClassName(beanClassName);

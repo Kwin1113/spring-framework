@@ -24,8 +24,7 @@ import org.springframework.beans.Mergeable;
 import org.springframework.lang.Nullable;
 
 /**
- * Tag collection class used to hold managed List elements, which may
- * include runtime bean references (to be resolved into bean objects).
+ * 标签tag集合类，用于管理可能持有运行时runtime bean引用的List元素（将被解析成bean对象）
  *
  * @author Rod Johnson
  * @author Rob Harrop
@@ -54,8 +53,8 @@ public class ManagedList<E> extends ArrayList<E> implements Mergeable, BeanMetad
 
 
 	/**
-	 * Set the configuration source {@code Object} for this metadata element.
-	 * <p>The exact type of the object will depend on the configuration mechanism used.
+	 * 给该元数据元素设置配置源对象{@code Object}
+	 * 对象的确切类型取决于使用的配置机制
 	 */
 	public void setSource(@Nullable Object source) {
 		this.source = source;
@@ -68,14 +67,14 @@ public class ManagedList<E> extends ArrayList<E> implements Mergeable, BeanMetad
 	}
 
 	/**
-	 * Set the default element type name (class name) to be used for this list.
+	 * 设置默认的元素类型名称（类名称），用于该list
 	 */
 	public void setElementTypeName(String elementTypeName) {
 		this.elementTypeName = elementTypeName;
 	}
 
 	/**
-	 * Return the default element type name (class name) to be used for this list.
+	 * 返回该list的默认元素类型名称（类名称）
 	 */
 	@Nullable
 	public String getElementTypeName() {
@@ -83,8 +82,7 @@ public class ManagedList<E> extends ArrayList<E> implements Mergeable, BeanMetad
 	}
 
 	/**
-	 * Set whether merging should be enabled for this collection,
-	 * in case of a 'parent' collection value being present.
+	 * 设置该集合存在父集合的情况下是否允许合并
 	 */
 	public void setMergeEnabled(boolean mergeEnabled) {
 		this.mergeEnabled = mergeEnabled;
@@ -98,12 +96,15 @@ public class ManagedList<E> extends ArrayList<E> implements Mergeable, BeanMetad
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<E> merge(@Nullable Object parent) {
+		//不允许合并
 		if (!this.mergeEnabled) {
 			throw new IllegalStateException("Not allowed to merge when the 'mergeEnabled' property is set to 'false'");
 		}
+		//没有父集合，直接返回自身
 		if (parent == null) {
 			return this;
 		}
+		//父集合不是集合类型
 		if (!(parent instanceof List)) {
 			throw new IllegalArgumentException("Cannot merge with object of type [" + parent.getClass() + "]");
 		}

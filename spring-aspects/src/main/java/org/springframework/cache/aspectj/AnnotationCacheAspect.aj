@@ -23,20 +23,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 
 /**
- * Concrete AspectJ cache aspect using Spring's @{@link Cacheable} annotation.
+ * Spring @{@link Cacheable}注解的具体AspectJ缓存切面
  *
- * <p>When using this aspect, you <i>must</i> annotate the implementation class (and/or
- * methods within that class), <i>not</i> the interface (if any) that the class
- * implements. AspectJ follows Java's rule that annotations on interfaces are <i>not</i>
+ * <p>当使用该切面时，必须注解在实现类（或该类的方法上），而不能注解在该类所实现的接口上
+ * AspectJ遵守Java规范，接口上的注解是不能被继承的AspectJ follows Java's rule that annotations on interfaces are <i>not</i>
  * inherited.
  *
- * <p>A {@code @Cacheable} annotation on a class specifies the default caching semantics
- * for the execution of any <b>public</b> operation in the class.
+ * 类上的{@code @Cacheable}注解以默认缓存语义指定该类中的所有public操作
  *
- * <p>A {@code @Cacheable} annotation on a method within the class overrides the default
- * caching semantics given by the class annotation (if present). Any method may be
- * annotated (regardless of visibility). Annotating non-public methods directly is the
- * only way to get caching demarcation for the execution of such operations.
+ * 类中方法上的{@code @Cacheable}注解将覆盖类上默认缓存语义（如果存在的话）。任何方法都可能被
+ * 注解（不论是否可见）。直接注释非公共方法是获得用于执行此类操作的缓存分界的唯一方法。
  *
  * @author Costin Leau
  * @since 3.1
@@ -48,60 +44,56 @@ public aspect AnnotationCacheAspect extends AbstractCacheAspect {
 	}
 
 	/**
-	 * Matches the execution of any public method in a type with the @{@link Cacheable}
-	 * annotation, or any subtype of a type with the {@code @Cacheable} annotation.
+	 * 匹配任何有@{@link Cacheable}注解的类或有@{@link Cacheable}注解的子类的方法执行。
 	 */
 	private pointcut executionOfAnyPublicMethodInAtCacheableType() :
 		execution(public * ((@Cacheable *)+).*(..)) && within(@Cacheable *);
 
 	/**
-	 * Matches the execution of any public method in a type with the @{@link CacheEvict}
-	 * annotation, or any subtype of a type with the {@code CacheEvict} annotation.
+	 * 匹配任何有@{@link CacheEvict}注解的类或有@{@link CacheEvict}注解的子类的方法执行。
 	 */
 	private pointcut executionOfAnyPublicMethodInAtCacheEvictType() :
 		execution(public * ((@CacheEvict *)+).*(..)) && within(@CacheEvict *);
 
 	/**
-	 * Matches the execution of any public method in a type with the @{@link CachePut}
-	 * annotation, or any subtype of a type with the {@code CachePut} annotation.
+	 * 匹配任何有@{@link CachePut}注解的类或有@{@link CachePut}注解的子类的方法执行。
 	 */
 	private pointcut executionOfAnyPublicMethodInAtCachePutType() :
 		execution(public * ((@CachePut *)+).*(..)) && within(@CachePut *);
 
 	/**
-	 * Matches the execution of any public method in a type with the @{@link Caching}
-	 * annotation, or any subtype of a type with the {@code Caching} annotation.
+	 * 匹配任何有@{@link Caching}注解的类或有@{@link Caching}注解的子类的方法执行。
 	 */
 	private pointcut executionOfAnyPublicMethodInAtCachingType() :
 		execution(public * ((@Caching *)+).*(..)) && within(@Caching *);
 
 	/**
+	 * 匹配@{@link Cacheable}注解的所有方法执行
 	 * Matches the execution of any method with the @{@link Cacheable} annotation.
 	 */
 	private pointcut executionOfCacheableMethod() :
 		execution(@Cacheable * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link CacheEvict} annotation.
+	 * 匹配@{@link CacheEvict}注解的所有方法执行
 	 */
 	private pointcut executionOfCacheEvictMethod() :
 		execution(@CacheEvict * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link CachePut} annotation.
+	 * 匹配@{@link CachePut}注解的所有方法执行
 	 */
 	private pointcut executionOfCachePutMethod() :
 		execution(@CachePut * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link Caching} annotation.
+	 * 匹配@{@link Caching}注解的所有方法执行
 	 */
 	private pointcut executionOfCachingMethod() :
 		execution(@Caching * *(..));
 
 	/**
-	 * Definition of pointcut from super aspect - matched join points will have Spring
-	 * cache management applied.
+	 * 定义父类切面的切入点 - 匹配的切入点将应用Spring缓存管理。
 	 */
 	protected pointcut cacheMethodExecution(Object cachedObject) :
 		(executionOfAnyPublicMethodInAtCacheableType()

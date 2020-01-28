@@ -28,19 +28,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Generic auto proxy creator that builds AOP proxies for specific beans
- * based on detected Advisors for each bean.
+ * 通用的自动代理创建器，可以为检测到的每个增强器为每个bean创建特定的AOP代理
  *
- * <p>Subclasses may override the {@link #findCandidateAdvisors()} method to
- * return a custom list of Advisors applying to any object. Subclasses can
- * also override the inherited {@link #shouldSkip} method to exclude certain
- * objects from auto-proxying.
+ * 子类需要重写{@link #findCandidateAdvisors()}方法，返回自定义列表，该列表中
+ * 需要包含应用于任何对象的增强器。子类也可以通过重写该类继承的{@link #shouldSkip}
+ * 方法，选择不为某些对象自动创建代理。
  *
- * <p>Advisors or advices requiring ordering should implement the
- * {@link org.springframework.core.Ordered} interface. This class sorts
- * Advisors by Ordered order value. Advisors that don't implement the
- * Ordered interface will be considered as unordered; they will appear
- * at the end of the advisor chain in undefined order.
+ * 需要满足执行顺序的增强或增强器，需要实现{@link org.springframework.core.Ordered}接口。
+ * 该类通过Ordered接口中有序的order值对增强器进行排序。未实现Ordered接口的
+ * 增强器将被认为是无序的；将会在未定义顺序的增强器链尾部执行。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

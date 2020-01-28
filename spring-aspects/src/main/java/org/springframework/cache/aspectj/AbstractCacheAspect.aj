@@ -27,15 +27,13 @@ import org.springframework.cache.interceptor.CacheOperationInvoker;
 import org.springframework.cache.interceptor.CacheOperationSource;
 
 /**
- * Abstract superaspect for AspectJ cache aspects. Concrete subaspects will implement the
- * {@link #cacheMethodExecution} pointcut using a strategy such as Java 5 annotations.
+ * AspectJ缓存切面的抽象父类切面。具体的子类切面要通过例如Java 5 注解的策略实现
+ * {@link #cacheMethodExecution}切入点
  *
- * <p>Suitable for use inside or outside the Spring IoC container. Set the
- * {@link #setCacheManager cacheManager} property appropriately, allowing use of any cache
- * implementation supported by Spring.
+ * 不论在Spring IoC容器内外都适用。合理地设置{@link #setCacheManager cacheManager}
+ * 属性，就能够适用Spring支持的所有缓存实现方案。
  *
- * <p><b>NB:</b> If a method implements an interface that is itself cache annotated, the
- * relevant Spring cache definition will <i>not</i> be resolved.
+ * 注意：如果一个方法实现了一个接口，该接口本身就是缓存注释的，则不会解析相关的Spring缓存定义。
  *
  * @author Costin Leau
  * @author Stephane Nicoll
@@ -47,9 +45,8 @@ public abstract aspect AbstractCacheAspect extends CacheAspectSupport implements
 	}
 
 	/**
-	 * Construct object using the given caching metadata retrieval strategy.
-	 * @param cos {@link CacheOperationSource} implementation, retrieving Spring cache
-	 * metadata for each joinpoint.
+	 * 通过给定的缓存元数据检索策略构造对象
+	 * @param cos {@link CacheOperationSource}实现, 在每个切入点检索Spring cache缓存元数据
 	 */
 	protected AbstractCacheAspect(CacheOperationSource... cos) {
 		setCacheOperationSources(cos);
@@ -62,6 +59,7 @@ public abstract aspect AbstractCacheAspect extends CacheAspectSupport implements
 
 	@SuppressAjWarnings("adviceDidNotMatch")
 	Object around(final Object cachedObject) : cacheMethodExecution(cachedObject) {
+		//获取切入点的实际方法
 		MethodSignature methodSignature = (MethodSignature) thisJoinPoint.getSignature();
 		Method method = methodSignature.getMethod();
 
@@ -86,7 +84,7 @@ public abstract aspect AbstractCacheAspect extends CacheAspectSupport implements
 	}
 
 	/**
-	 * Concrete subaspects must implement this pointcut, to identify cached methods.
+	 * 具体的子切面需要实现该切入点，指定缓存方法
 	 */
 	protected abstract pointcut cacheMethodExecution(Object cachedObject);
 

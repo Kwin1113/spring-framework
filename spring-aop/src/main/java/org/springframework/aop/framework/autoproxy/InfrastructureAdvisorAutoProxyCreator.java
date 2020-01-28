@@ -21,8 +21,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
- * Auto-proxy creator that considers infrastructure Advisor beans only,
- * ignoring any application-defined Advisors.
+ * 自动代理创建类，只代理基础增强bean（infrastructure Advisor beans），
+ * 忽略应用程序中定义的增强器。
  *
  * @author Juergen Hoeller
  * @since 2.0.7
@@ -40,6 +40,13 @@ public class InfrastructureAdvisorAutoProxyCreator extends AbstractAdvisorAutoPr
 		this.beanFactory = beanFactory;
 	}
 
+	/**
+	 * 重写了父类的方法
+	 * 依次满足以下条件：
+	 * 1. beanFactory不为空
+	 * 2. beanFactory中包含{@code beanName}的bean定义
+	 * 3. beanFactory中该{@code beanName}对应的角色是{@link BeanDefinition#ROLE_INFRASTRUCTURE}
+	 */
 	@Override
 	protected boolean isEligibleAdvisorBean(String beanName) {
 		return (this.beanFactory != null && this.beanFactory.containsBeanDefinition(beanName) &&

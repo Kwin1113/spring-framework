@@ -173,7 +173,7 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 		}
 
 		/**
-		 * 这册一个缓存切面。
+		 * 注册一个缓存切面。
 		 * <pre class="code">
 		 * < bean id="cacheAspect" class="org.springframework.cache.aspectj.AnnotationCacheAspect" factory-method="aspectOf">
 		 *   < property name="cacheManager" ref="cacheManager"/>

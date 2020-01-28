@@ -30,16 +30,12 @@ import org.springframework.cache.interceptor.CacheOperationInvoker;
 import org.springframework.cache.jcache.interceptor.JCacheAspectSupport;
 
 /**
- * Concrete AspectJ cache aspect using JSR-107 standard annotations.
+ * 使用JSR-107标准注解的具体AspectJ缓存切面
  *
- * <p>When using this aspect, you <i>must</i> annotate the implementation class (and/or
- * methods within that class), <i>not</i> the interface (if any) that the class
- * implements. AspectJ follows Java's rule that annotations on interfaces are <i>not</i>
- * inherited.
+ * 使用该切面时，必须注解在实现类（和/或类中的方法）上，不能注解在接口上。AspectJ遵守
+ * Java规范，接口上的注解不会被继承
  *
- * <p>Any method may be annotated (regardless of visibility). Annotating non-public
- * methods directly is the only way to get caching demarcation for the execution of
- * such operations.
+ * 任何方法都能被注解（不管可见性）。直接注解非public方法是获得此类操作的缓存划分的唯一方法
  *
  * @author Stephane Nicoll
  * @since 4.1
@@ -74,8 +70,7 @@ public aspect JCacheCacheAspect extends JCacheAspectSupport {
 	}
 
 	/**
-	* Definition of pointcut: matched join points will have JSR-107
-	* cache management applied.
+	 * 定义切入点：匹配满足JSR-107规范的缓存管理器切入点
 	*/
 	protected pointcut cacheMethodExecution(Object cachedObject) :
 			(executionOfCacheResultMethod()
@@ -85,25 +80,25 @@ public aspect JCacheCacheAspect extends JCacheAspectSupport {
 			&& this(cachedObject);
 
 	/**
-	 * Matches the execution of any method with the @{@link CacheResult} annotation.
+	 * 匹配任何带有@{@link CacheResult}注解的方法执行
 	 */
 	private pointcut executionOfCacheResultMethod() :
 		execution(@CacheResult * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link CachePut} annotation.
+	 * 匹配任何带有@{@link CachePut}注解的方法执行
 	 */
 	private pointcut executionOfCachePutMethod() :
 		execution(@CachePut * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link CacheRemove} annotation.
+	 * 匹配任何带有@{@link CacheRemove}注解的方法执行
 	 */
 	private pointcut executionOfCacheRemoveMethod() :
 		execution(@CacheRemove * *(..));
 
 	/**
-	 * Matches the execution of any method with the @{@link CacheRemoveAll} annotation.
+	 * 匹配任何带有@{@link CacheRemoveAll}注解的方法执行
 	 */
 	private pointcut executionOfCacheRemoveAllMethod() :
 		execution(@CacheRemoveAll * *(..));
