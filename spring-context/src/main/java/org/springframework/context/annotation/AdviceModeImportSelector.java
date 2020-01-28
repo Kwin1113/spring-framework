@@ -25,13 +25,12 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Convenient base class for {@link ImportSelector} implementations that select imports
- * based on an {@link AdviceMode} value from an annotation (such as the {@code @Enable*}
- * annotations).
+ * {@link ImportSelector}实现的便利基类，用于通过注解上的{@link AdviceMode}值来选择导入
+ * （例如{@code @Enable*}注解）
  *
  * @author Chris Beams
  * @since 3.1
- * @param <A> annotation containing {@linkplain #getAdviceModeAttributeName() AdviceMode attribute}
+ * @param <A> 包含{@linkplain #getAdviceModeAttributeName() AdviceMode}属性的注解
  */
 public abstract class AdviceModeImportSelector<A extends Annotation> implements ImportSelector {
 
@@ -83,14 +82,13 @@ public abstract class AdviceModeImportSelector<A extends Annotation> implements 
 	}
 
 	/**
-	 * Determine which classes should be imported based on the given {@code AdviceMode}.
-	 * <p>Returning {@code null} from this method indicates that the {@code AdviceMode}
-	 * could not be handled or was unknown and that an {@code IllegalArgumentException}
-	 * should be thrown.
-	 * @param adviceMode the value of the {@linkplain #getAdviceModeAttributeName()
-	 * advice mode attribute} for the annotation specified via generics.
-	 * @return array containing classes to import (empty array if none;
-	 * {@code null} if the given {@code AdviceMode} is unknown)
+	 * 通过给定的{@code AdviceMode}决定那些类需要被导入
+	 * 该方法返回{@code null}表示无法处理该{@code AdviceMode}或者该{@code AdviceMode}未知
+	 * 并且应该抛出{@code IllegalArgumentException}异常
+	 * @param adviceMode {@linkplain #getAdviceModeAttributeName()
+	 * advice mode attribute}的值，通过泛型指定的注释
+	 * @return 包含需要导入的类名的数组（如果不需要导入则返回空数组；
+	 * 如果给定{@code AdviceMode}未知，则返回{@code null}）
 	 */
 	@Nullable
 	protected abstract String[] selectImports(AdviceMode adviceMode);

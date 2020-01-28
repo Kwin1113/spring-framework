@@ -26,11 +26,12 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Selects which implementation of {@link AbstractCachingConfiguration} should
- * be used based on the value of {@link EnableCaching#mode} on the importing
- * {@code @Configuration} class.
+ * 选择应该使用哪个{@link AbstractCachingConfiguration}的实现类，通过配置类{@code @Configuration}
+ * 中{@link EnableCaching#mode}的属性来决定
  *
- * <p>Detects the presence of JSR-107 and enables JCache support accordingly.
+ * 如果检测到JSR-107，则相应的启动JCache支持
+ *
+ * 代理模式的一个策略选择器
  *
  * @author Chris Beams
  * @author Stephane Nicoll
@@ -40,12 +41,13 @@ import org.springframework.util.StringUtils;
  */
 public class CachingConfigurationSelector extends AdviceModeImportSelector<EnableCaching> {
 
+	//在context-support包中
 	private static final String PROXY_JCACHE_CONFIGURATION_CLASS =
 			"org.springframework.cache.jcache.config.ProxyJCacheConfiguration";
-
+	//在aspect包中
 	private static final String CACHE_ASPECT_CONFIGURATION_CLASS_NAME =
 			"org.springframework.cache.aspectj.AspectJCachingConfiguration";
-
+	//在aspect包中
 	private static final String JCACHE_ASPECT_CONFIGURATION_CLASS_NAME =
 			"org.springframework.cache.aspectj.AspectJJCacheConfiguration";
 
@@ -55,6 +57,7 @@ public class CachingConfigurationSelector extends AdviceModeImportSelector<Enabl
 	private static final boolean jcacheImplPresent;
 
 	static {
+		//初始化看看有没有加载jsr107或jcache的配置类，初始化两个布尔值参数
 		ClassLoader classLoader = CachingConfigurationSelector.class.getClassLoader();
 		jsr107Present = ClassUtils.isPresent("javax.cache.Cache", classLoader);
 		jcacheImplPresent = ClassUtils.isPresent(PROXY_JCACHE_CONFIGURATION_CLASS, classLoader);
@@ -62,9 +65,9 @@ public class CachingConfigurationSelector extends AdviceModeImportSelector<Enabl
 
 
 	/**
-	 * Returns {@link ProxyCachingConfiguration} or {@code AspectJCachingConfiguration}
-	 * for {@code PROXY} and {@code ASPECTJ} values of {@link EnableCaching#mode()},
-	 * respectively. Potentially includes corresponding JCache configuration as well.
+	 * 分别为{@link EnableCaching＃mode（）}的{@code PROXY}和{@code ASPECTJ}值返回
+	 * {@link ProxyCachingConfiguration}或{@code AspectJCachingConfiguration}。
+	 * 可能还包括相应的JCache配置。
 	 */
 	@Override
 	public String[] selectImports(AdviceMode adviceMode) {
@@ -79,8 +82,8 @@ public class CachingConfigurationSelector extends AdviceModeImportSelector<Enabl
 	}
 
 	/**
-	 * Return the imports to use if the {@link AdviceMode} is set to {@link AdviceMode#PROXY}.
-	 * <p>Take care of adding the necessary JSR-107 import if it is available.
+	 * 如果{@link AdviceMode}设置为{@link AdviceMode#PROXY}，返回使用的导入
+	 * 请注意添加必要的JSR-107导入（如果可用）
 	 */
 	private String[] getProxyImports() {
 		List<String> result = new ArrayList<>(3);
@@ -93,8 +96,8 @@ public class CachingConfigurationSelector extends AdviceModeImportSelector<Enabl
 	}
 
 	/**
-	 * Return the imports to use if the {@link AdviceMode} is set to {@link AdviceMode#ASPECTJ}.
-	 * <p>Take care of adding the necessary JSR-107 import if it is available.
+	 * 如果{@link AdviceMode}设置为{@link AdviceMode＃ASPECTJ}，返回要使用的导入
+	 * 请注意添加必要的JSR-107导入（如果可用）
 	 */
 	private String[] getAspectJImports() {
 		List<String> result = new ArrayList<>(2);

@@ -61,6 +61,7 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 	private static final boolean jcacheImplPresent;
 
 	static {
+		//获得类加载器查看jsr107和jcache的相关类是否被加载，并初始化这两个布尔值变量
 		ClassLoader classLoader = AnnotationDrivenCacheBeanDefinitionParser.class.getClassLoader();
 		jsr107Present = ClassUtils.isPresent("javax.cache.Cache", classLoader);
 		jcacheImplPresent = ClassUtils.isPresent(
@@ -85,17 +86,16 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 			// mode="proxy"
 			registerCacheAdvisor(element, parserContext);
 		}
-
 		return null;
 	}
-
+	/** 通过AspectJ方式来拦截 */
 	private void registerCacheAspect(Element element, ParserContext parserContext) {
 		SpringCachingConfigurer.registerCacheAspect(element, parserContext);
 		if (jsr107Present && jcacheImplPresent) {
 			JCacheCachingConfigurer.registerCacheAspect(element, parserContext);
 		}
 	}
-
+	/** 通过Spring代理来拦截 */
 	private void registerCacheAdvisor(Element element, ParserContext parserContext) {
 		AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
 		SpringCachingConfigurer.registerCacheAdvisor(element, parserContext);
