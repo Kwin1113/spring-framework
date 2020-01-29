@@ -21,7 +21,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * 指示方法（或类中的所有方法）触发缓存增加操作的注释。
+ * 指示方法（或类中的所有方法）触发缓存增加操作的注解。
  * <p>
  * 和 {@link Cacheable @Cacheable} 注解对比，该注解不会导致被增强的方法被跳过（命中缓存）。
  * 相反，它会一直调用方法，并且把返回结果保存在关联的缓存中。注意Java8中的

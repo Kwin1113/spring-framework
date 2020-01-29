@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
  * 和ASM的注解元数据 {@link org.springframework.core.type.AnnotationMetadata} 的实现解析。
  *
  * 下面这句不太懂：
- * 提供“伪验证”以避免调用代码中嘈杂的Map泛型，以及以类型安全的方式查找注释属性的便捷方法。
+ * 提供“伪验证”以避免调用代码中嘈杂的Map泛型，以及以类型安全的方式查找注解属性的便捷方法。
  * （大概是说指定了LinkedHashMap的泛型为<String, Object>）
  * <p>Provides 'pseudo-reification' to avoid noisy Map generics in the calling
  * code as well as convenience methods for looking up annotation attributes

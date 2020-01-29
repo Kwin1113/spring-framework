@@ -48,7 +48,8 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public class SpringCacheAnnotationParser implements CacheAnnotationParser, Serializable {
 
-	private static final Set<Class<? extends Annotation>> CACHE_OPERATION_ANNOTATIONS = new LinkedHashSet<>(8);
+	private static final Set<Class<? extends Annotation>> CACHE_OPERATION_ANNOTATIONS
+			= new LinkedHashSet<>(8);
 
 	static {
 		CACHE_OPERATION_ANNOTATIONS.add(Cacheable.class);
@@ -82,6 +83,7 @@ public class SpringCacheAnnotationParser implements CacheAnnotationParser, Seria
 		Collection<CacheOperation> ops = parseCacheAnnotations(cachingConfig, ae, false);
 		if (ops != null && ops.size() > 1) {
 			// More than one operation found -> local declarations override interface-declared ones...
+			// 查询到多于一个注解 -> 查询本地（实现类）声明，覆盖接口声明
 			Collection<CacheOperation> localOps = parseCacheAnnotations(cachingConfig, ae, true);
 			if (localOps != null) {
 				return localOps;
@@ -96,7 +98,9 @@ public class SpringCacheAnnotationParser implements CacheAnnotationParser, Seria
 
 		//获取目标类ae上的的相关注解，并合并相同注解的属性
 		Collection<? extends Annotation> anns = (localOnly ?
+				//不查找接口上的注解
 				AnnotatedElementUtils.getAllMergedAnnotations(ae, CACHE_OPERATION_ANNOTATIONS) :
+				//查找接口上的注解
 				AnnotatedElementUtils.findAllMergedAnnotations(ae, CACHE_OPERATION_ANNOTATIONS));
 		if (anns.isEmpty()) {
 			return null;

@@ -127,7 +127,7 @@ public class AnnotationCacheOperationSource extends AbstractFallbackCacheOperati
 	 * 通过给定的 {@link CacheOperationProvider} 确定缓存操作。
 	 * 实现类委托给已配置的{@link CacheAnnotationParser CacheAnnotationParsers}，
 	 * 来解析已知的注解获得Spring元数据属性类。
-	 * 可以重载用于支持自定义注解以支持缓存元数据。
+	 * 可以重写用于支持自定义注解以支持缓存元数据。
 	 *
 	 * @param provider 缓存操作提供者
 	 * @return 已配置的缓存操作，如果未找到，则返回{@code null}。

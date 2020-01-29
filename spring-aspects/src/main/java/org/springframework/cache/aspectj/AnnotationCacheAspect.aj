@@ -32,7 +32,7 @@ import org.springframework.cache.annotation.Caching;
  * 类上的{@code @Cacheable}注解以默认缓存语义指定该类中的所有public操作
  *
  * 类中方法上的{@code @Cacheable}注解将覆盖类上默认缓存语义（如果存在的话）。任何方法都可能被
- * 注解（不论是否可见）。直接注释非公共方法是获得用于执行此类操作的缓存分界的唯一方法。
+ * 注解（不论是否可见）。直接注解非公共方法是获得用于执行此类操作的缓存分界的唯一方法。
  *
  * @author Costin Leau
  * @since 3.1

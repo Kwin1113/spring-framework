@@ -60,7 +60,8 @@ public class ProxyCachingConfiguration extends AbstractCachingConfiguration {
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public CacheInterceptor cacheInterceptor() {
 		CacheInterceptor interceptor = new CacheInterceptor();
-		interceptor.configure(this.errorHandler, this.keyGenerator, this.cacheResolver, this.cacheManager);
+		interceptor.configure(this.errorHandler, this.keyGenerator,
+				this.cacheResolver, this.cacheManager);
 		interceptor.setCacheOperationSource(cacheOperationSource());
 		return interceptor;
 	}

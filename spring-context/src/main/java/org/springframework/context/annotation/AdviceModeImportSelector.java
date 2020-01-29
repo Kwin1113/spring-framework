@@ -86,7 +86,7 @@ public abstract class AdviceModeImportSelector<A extends Annotation> implements 
 	 * 该方法返回{@code null}表示无法处理该{@code AdviceMode}或者该{@code AdviceMode}未知
 	 * 并且应该抛出{@code IllegalArgumentException}异常
 	 * @param adviceMode {@linkplain #getAdviceModeAttributeName()
-	 * advice mode attribute}的值，通过泛型指定的注释
+	 * advice mode attribute}的值，通过泛型指定的注解
 	 * @return 包含需要导入的类名的数组（如果不需要导入则返回空数组；
 	 * 如果给定{@code AdviceMode}未知，则返回{@code null}）
 	 */

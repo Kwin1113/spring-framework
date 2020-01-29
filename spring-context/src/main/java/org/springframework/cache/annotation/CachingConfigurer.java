@@ -24,7 +24,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * @ {@link EnableCaching}注解的配置类@{@link org.springframework.context.annotation.Configuration
- * Configuration}的实现接口，该注解明确特定地指定在注解驱动的缓存管理中，如何处理缓存和key的生成方法。
+ * Configuration}的实现接口，该接口明确地指定在注解驱动的缓存管理中，如何处理缓存和key的生成方法。
  * 子类{@link CachingConfigurerSupport}实现了该接口的所有基础实现。
  *
  * <p>See @{@link EnableCaching} for general examples and context; see

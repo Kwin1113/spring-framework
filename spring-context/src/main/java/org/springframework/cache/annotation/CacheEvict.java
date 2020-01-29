@@ -21,7 +21,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * 指示方法（或类中的所有方法）触发缓存删除操作的注释。
+ * 指示方法（或类中的所有方法）触发缓存删除操作的注解。
  * <p>
  * 该注解可以被用作自定义组合注解的源注解。
  *

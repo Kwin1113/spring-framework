@@ -27,9 +27,8 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * Registers an auto proxy creator against the current {@link BeanDefinitionRegistry}
- * as appropriate based on an {@code @Enable*} annotation having {@code mode} and
- * {@code proxyTargetClass} attributes set to the correct values.
+ * 根据当前{@link BeanDefinitionRegistry}来注册一个自动代理创建器，基于一个{@code @Enable*}
+ * 注解，该注解需要包含{@code mode}和{@code proxyTargetClass}参数，并正确设值。
  *
  * @author Chris Beams
  * @since 3.1

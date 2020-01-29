@@ -367,20 +367,15 @@ public abstract class AnnotatedElementUtils {
 	}
 
 	/**
-	 * Get <strong>all</strong> annotations of the specified {@code annotationTypes}
-	 * within the annotation hierarchy <em>above</em> the supplied {@code element};
-	 * and for each annotation found, merge that annotation's attributes with
-	 * <em>matching</em> attributes from annotations in lower levels of the
-	 * annotation hierarchy and synthesize the results back into an annotation
-	 * of the corresponding {@code annotationType}.
-	 * <p>{@link AliasFor @AliasFor} semantics are fully supported, both within a
-	 * single annotation and within annotation hierarchies.
-	 * <p>This method follows <em>get semantics</em> as described in the
-	 * {@linkplain AnnotatedElementUtils class-level javadoc}.
-	 * @param element the annotated element (never {@code null})
-	 * @param annotationTypes the annotation types to find
-	 * @return the set of all merged, synthesized {@code Annotations} found,
-	 * or an empty set if none were found
+	 * 从给定的元素{@code element}上注解的层次结构中，GET获取指定注解类型{@code annotationTypes}；
+	 * 对于找到的每个注解，将该注解的属性与注解层次结构中较低级别的注解中的匹配属性进行合并，
+	 * 然后将结果合并到相应{@code annotationType}的注解中。
+	 * 完全支持{@link AliasFor @AliasFor}语法，不论在单个注解或注解层级上。
+	 * 该方法遵守{@linkplain AnnotatedElementUtils class-level javadoc}
+	 * 中描述的语法。
+	 * @param element 被注解的元素(永不为 {@code null})
+	 * @param annotationTypes 查找的注解类型
+	 * @return 所有找到的已合并的{@code Annotations}注解集合Set，如果没找到，则返回空集合Set
 	 * @since 5.1
 	 * @see #getAllMergedAnnotations(AnnotatedElement, Class)
 	 */
@@ -660,20 +655,15 @@ public abstract class AnnotatedElementUtils {
 	}
 
 	/**
-	 * Find <strong>all</strong> annotations of the specified {@code annotationTypes}
-	 * within the annotation hierarchy <em>above</em> the supplied {@code element};
-	 * and for each annotation found, merge that annotation's attributes with
-	 * <em>matching</em> attributes from annotations in lower levels of the
-	 * annotation hierarchy and synthesize the results back into an annotation
-	 * of the corresponding {@code annotationType}.
-	 * <p>{@link AliasFor @AliasFor} semantics are fully supported, both within a
-	 * single annotation and within annotation hierarchies.
-	 * <p>This method follows <em>find semantics</em> as described in the
-	 * {@linkplain AnnotatedElementUtils class-level javadoc}.
-	 * @param element the annotated element (never {@code null})
-	 * @param annotationTypes the annotation types to find
-	 * @return the set of all merged, synthesized {@code Annotations} found,
-	 * or an empty set if none were found
+	 * 从给定的元素{@code element}上注解的层次结构中，FIND查找指定注解类型{@code annotationTypes}；
+	 * 对于找到的每个注解，将该注解的属性与注解层次结构中较低级别的注解中的匹配属性进行合并，
+	 * 然后将结果合并到相应{@code annotationType}的注解中。
+	 * 完全支持{@link AliasFor @AliasFor}语法，不论在单个注解或注解层级上。
+	 * 该方法遵守{@linkplain AnnotatedElementUtils class-level javadoc}
+	 * 中描述的语法。
+	 * @param element 被注解的元素(永不为 {@code null})
+	 * @param annotationTypes 查找的注解类型
+	 * @return 所有找到的已合并的{@code Annotations}注解集合Set，如果没找到，则返回空集合Set
 	 * @since 5.1
 	 * @see #findAllMergedAnnotations(AnnotatedElement, Class)
 	 */

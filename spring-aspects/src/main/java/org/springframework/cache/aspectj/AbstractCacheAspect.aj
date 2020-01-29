@@ -33,7 +33,7 @@ import org.springframework.cache.interceptor.CacheOperationSource;
  * 不论在Spring IoC容器内外都适用。合理地设置{@link #setCacheManager cacheManager}
  * 属性，就能够适用Spring支持的所有缓存实现方案。
  *
- * 注意：如果一个方法实现了一个接口，该接口本身就是缓存注释的，则不会解析相关的Spring缓存定义。
+ * 注意：如果一个方法实现了一个接口，该接口本身就是缓存注解的，则不会解析相关的Spring缓存定义。
  *
  * @author Costin Leau
  * @author Stephane Nicoll

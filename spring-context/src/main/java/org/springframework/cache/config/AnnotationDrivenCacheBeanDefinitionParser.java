@@ -71,8 +71,7 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 
 	/**
 	 * 解析'{@code <cache:annotation-driven>}'标签。必要时将会通过
-	 * {@link AopNamespaceUtils#registerAutoProxyCreatorIfNecessary
-	 * 在容器中创建一个自动代理创建者AutoProxyCreator。
+	 * {@link AopNamespaceUtils#registerAutoProxyCreatorIfNecessary}在容器中创建一个自动代理创建者AutoProxyCreator。
 	 */
 	@Override
 	@Nullable
@@ -88,6 +87,7 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 		}
 		return null;
 	}
+
 	/** 通过AspectJ方式来拦截 */
 	private void registerCacheAspect(Element element, ParserContext parserContext) {
 		SpringCachingConfigurer.registerCacheAspect(element, parserContext);
@@ -95,6 +95,7 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 			JCacheCachingConfigurer.registerCacheAspect(element, parserContext);
 		}
 	}
+
 	/** 通过Spring代理来拦截 */
 	private void registerCacheAdvisor(Element element, ParserContext parserContext) {
 		AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
@@ -138,7 +139,8 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 				Object eleSource = parserContext.extractSource(element);
 
 				// 创建缓存操作资源定义
-				RootBeanDefinition sourceDef = new RootBeanDefinition("org.springframework.cache.annotation.AnnotationCacheOperationSource");
+				RootBeanDefinition sourceDef = new RootBeanDefinition(
+						"org.springframework.cache.annotation.AnnotationCacheOperationSource");
 				sourceDef.setSource(eleSource);
 				sourceDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 				String sourceName = parserContext.getReaderContext().registerWithGeneratedName(sourceDef);
@@ -150,19 +152,22 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 				parseCacheResolution(element, interceptorDef, false);
 				parseErrorHandler(element, interceptorDef);
 				CacheNamespaceHandler.parseKeyGenerator(element, interceptorDef);
-				interceptorDef.getPropertyValues().add("cacheOperationSources", new RuntimeBeanReference(sourceName));
+				interceptorDef.getPropertyValues().add("cacheOperationSources",
+						new RuntimeBeanReference(sourceName));
 				String interceptorName = parserContext.getReaderContext().registerWithGeneratedName(interceptorDef);
 
 				// 创建缓存增强定义
 				RootBeanDefinition advisorDef = new RootBeanDefinition(BeanFactoryCacheOperationSourceAdvisor.class);
 				advisorDef.setSource(eleSource);
 				advisorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-				advisorDef.getPropertyValues().add("cacheOperationSource", new RuntimeBeanReference(sourceName));
+				advisorDef.getPropertyValues().add("cacheOperationSource",
+						new RuntimeBeanReference(sourceName));
 				advisorDef.getPropertyValues().add("adviceBeanName", interceptorName);
 				if (element.hasAttribute("order")) {
 					advisorDef.getPropertyValues().add("order", element.getAttribute("order"));
 				}
-				parserContext.getRegistry().registerBeanDefinition(CacheManagementConfigUtils.CACHE_ADVISOR_BEAN_NAME, advisorDef);
+				parserContext.getRegistry().registerBeanDefinition(CacheManagementConfigUtils.CACHE_ADVISOR_BEAN_NAME,
+						advisorDef);
 
 				CompositeComponentDefinition compositeDef = new CompositeComponentDefinition(element.getTagName(), eleSource);
 				compositeDef.addNestedComponent(new BeanComponentDefinition(sourceDef, sourceName));

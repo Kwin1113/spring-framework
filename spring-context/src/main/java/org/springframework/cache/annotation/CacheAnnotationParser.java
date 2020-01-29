@@ -37,7 +37,7 @@ import java.util.Collection;
  */
 public interface CacheAnnotationParser {
 
-	/**
+	/**A
 	 * 判断所给类是否满足 {@code CacheAnnotationParser} 注解格式的缓存操作类。
 	 * <p>
 	 * 如果方法返回 {@code false}, 所给类的方法不会被 {@code #parseCacheAnnotations}
