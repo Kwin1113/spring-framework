@@ -192,7 +192,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		//如果没有设置CacheResolver，则去那CacheMangager
+		//如果没有设置CacheResolver，则取CacheMangager
 		if (getCacheResolver() == null) {
 			// Lazily initialize cache resolver via default cache manager...
 			Assert.state(this.beanFactory != null, "CacheResolver or BeanFactory must be set on cache aspect");
@@ -331,8 +331,10 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		if (this.initialized) {
 			//拿到目标原始Class
 			Class<?> targetClass = getTargetClass(target);
+			//该CacheOperationSource即为CacheInterceptor中设置的AnnotationCacheOperationSource
 			CacheOperationSource cacheOperationSource = getCacheOperationSource();
 			if (cacheOperationSource != null) {
+				//尝试从这个缓存操作源里获取缓存操作，这一步在AbstractFallbackCacheOperationSource里做了一步缓存
 				Collection<CacheOperation> operations = cacheOperationSource.getCacheOperations(method, targetClass);
 				if (!CollectionUtils.isEmpty(operations)) {
 					//将缓存操作进行执行
@@ -362,16 +364,21 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		return AopProxyUtils.ultimateTargetClass(target);
 	}
 
+	/**
+	 * 缓存操作真正执行的地方
+	 */
 	@Nullable
 	private Object execute(final CacheOperationInvoker invoker, Method method, CacheOperationContexts contexts) {
 		// Special handling of synchronized invocation
 		//如果需要同步执行
 		if (contexts.isSynchronized()) {
+			//获取CacheableOperation操作
 			CacheOperationContext context = contexts.get(CacheableOperation.class).iterator().next();
 			if (isConditionPassing(context, CacheOperationExpressionEvaluator.NO_RESULT)) {
 				Object key = generateKey(context, CacheOperationExpressionEvaluator.NO_RESULT);
 				Cache cache = context.getCaches().iterator().next();
 				try {
+					//通过cache的get(Object, Callable<T>)方法获取值（缓存或未命中直接调用底层方法）
 					return wrapCacheValue(method, cache.get(key, () -> unwrapReturnValue(invokeOperation(invoker))));
 				} catch (Cache.ValueRetrievalException ex) {
 					// The invoker wraps any Throwable in a ThrowableWrapper instance so we
@@ -380,6 +387,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 				}
 			} else {
 				// No caching required, only call the underlying method
+				//不需要缓存，直接调用底层方法
 				return invokeOperation(invoker);
 			}
 		}
@@ -387,7 +395,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		//不需要同步
 
 		// Process any early evictions
-		//先处理@CacheEvict注解
+		//先处理beforeInvocation=true的@CacheEvict注解
 		processCacheEvicts(contexts.get(CacheEvictOperation.class), true,
 				CacheOperationExpressionEvaluator.NO_RESULT);
 

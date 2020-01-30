@@ -56,7 +56,6 @@ class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 	/**
 	 * 持有结果对象的变量名称。
-	 * todo 该对象是否是存入缓存的结果
 	 */
 	public static final String RESULT_VARIABLE = "result";
 

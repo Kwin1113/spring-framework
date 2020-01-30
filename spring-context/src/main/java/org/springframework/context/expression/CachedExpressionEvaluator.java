@@ -82,7 +82,7 @@ public abstract class CachedExpressionEvaluator {
 	 */
 	protected Expression getExpression(Map<ExpressionKey, Expression> cache,
 			AnnotatedElementKey elementKey, String expression) {
-
+		//先从缓存中获取是否之前解析过
 		ExpressionKey expressionKey = createKey(elementKey, expression);
 		Expression expr = cache.get(expressionKey);
 		if (expr == null) {

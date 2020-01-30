@@ -94,13 +94,16 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 			//如果有缓存，则查看是不是空缓存，是的话返回null，不是返回该缓存。
 			return (cached != NULL_CACHING_ATTRIBUTE ? cached : null);
 		} else {
+			//在目标类和方法上寻找缓存操作
 			Collection<CacheOperation> cacheOps = computeCacheOperations(method, targetClass);
 			if (cacheOps != null) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Adding cacheable method '" + method.getName() + "' with attribute: " + cacheOps);
 				}
+				//并做缓存
 				this.attributeCache.put(cacheKey, cacheOps);
 			} else {
+				//没有的话标记空
 				this.attributeCache.put(cacheKey, NULL_CACHING_ATTRIBUTE);
 			}
 			return cacheOps;
@@ -127,35 +130,32 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 			return null;
 		}
 
-		// 方法可能是接口调用，但我们需要从目标类上获取属性。
-		// 如果目标类为空null，方法将保持不变。  ？？？
+		// 从目标类上获取目标方法
 		Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);
-
-		// 首先尝试在目标类的方法上获取缓存操作
+		// 首先尝试在该方法上获取缓存操作
 		Collection<CacheOperation> opDef = findCacheOperations(specificMethod);
 		if (opDef != null) {
 			return opDef;
 		}
 
-		// 再尝试在目标类上获取缓存操作
+		// 再fallback到声明该方法的类上获取缓存操作
 		opDef = findCacheOperations(specificMethod.getDeclaringClass());
 		if (opDef != null && ClassUtils.isUserLevelMethod(method)) {
 			return opDef;
 		}
 
 		if (specificMethod != method) {
-			// 还是没获取到属性，则fallback，从原始方法上找。
+			// 还是没获取到属性，则再fallback，从给定方法上找
 			opDef = findCacheOperations(method);
 			if (opDef != null) {
 				return opDef;
 			}
-			// 还是没找到，则从原始数据的目标类上找。
+			// 还是没找到，则再fallback到声明给定方法的类上找。
 			opDef = findCacheOperations(method.getDeclaringClass());
 			if (opDef != null && ClassUtils.isUserLevelMethod(method)) {
 				return opDef;
 			}
 		}
-
 		return null;
 	}
 
