@@ -25,13 +25,11 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link FactoryBean} for easy configuration of a {@link ConcurrentMapCache}
- * when used within a Spring container. Can be configured through bean properties;
- * uses the assigned Spring bean name as the default cache name.
+ * 当在Spring容器中使用时，可以通过该{@link FactoryBean}对{@link ConcurrentMapCache}
+ * 进行简单的配置。可以通过bean属性进行配置； 使用分配的Spring bean名称作为默认缓存名称。
  *
- * <p>Useful for testing or simple caching scenarios, typically in combination
- * with {@link org.springframework.cache.support.SimpleCacheManager} or
- * dynamically through {@link ConcurrentMapCacheManager}.
+ * 在测试或简单的缓存场景中很有用，通常与{@link org.springframework.cache.support.SimpleCacheManager}
+ * 配合使用，或者通过{@link ConcurrentMapCacheManager}动态使用。
  *
  * @author Costin Leau
  * @author Juergen Hoeller
