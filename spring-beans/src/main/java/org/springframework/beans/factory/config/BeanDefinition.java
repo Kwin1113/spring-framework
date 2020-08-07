@@ -23,6 +23,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo bean定义，描述bean的相关信息，包括属性值，构造参数值，和其他具体实现提供的信息等。
+ *
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
  * concrete implementations.

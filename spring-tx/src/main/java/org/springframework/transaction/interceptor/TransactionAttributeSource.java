@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO 用于 事务拦截器 进行元数据检索的策略接口
+ *
  * Strategy interface used by {@link TransactionInterceptor} for metadata retrieval.
  *
  * <p>Implementations know how to source transaction attributes, whether from configuration,

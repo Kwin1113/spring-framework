@@ -19,6 +19,8 @@ package org.springframework.beans.factory.parsing;
 import org.springframework.beans.BeanMetadataElement;
 
 /**
+ * todo bean默认定义的标记接口
+ *
  * Marker interface for a defaults definition,
  * extending BeanMetadataElement to inherit source exposure.
  *

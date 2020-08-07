@@ -27,6 +27,8 @@ import org.springframework.beans.factory.config.BeanReference;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 基于标准bean定义的组件定义，暴露给定bean的bean定义、内部bean定义和bean引用
+ *
  * ComponentDefinition based on a standard BeanDefinition, exposing the given bean
  * definition as well as inner bean definitions and bean references for the given bean.
  *
@@ -70,6 +72,7 @@ public class BeanComponentDefinition extends BeanDefinitionHolder implements Com
 
 		List<BeanDefinition> innerBeans = new ArrayList<>();
 		List<BeanReference> references = new ArrayList<>();
+		// 从给定BeanDefinitionHolder中获取内部bean定义和bean引用
 		PropertyValues propertyValues = beanDefinitionHolder.getBeanDefinition().getPropertyValues();
 		for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
 			Object value = propertyValue.getValue();

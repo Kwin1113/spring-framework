@@ -33,6 +33,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * todo 通过映射文件中的mapping映射来确认命名空间URI对应的NamespaceHandler实现类
+ *
  * Default implementation of the {@link NamespaceHandlerResolver} interface.
  * Resolves namespace URIs to implementation classes based on the mappings
  * contained in mapping file.

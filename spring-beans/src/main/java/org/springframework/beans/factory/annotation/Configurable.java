@@ -24,6 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * todo 将一个类标记为允许Spring驱动配置
+ *
  * Marks a class as being eligible for Spring-driven configuration.
  *
  * <p>Typically used with the AspectJ {@code AnnotationBeanConfigurerAspect}.

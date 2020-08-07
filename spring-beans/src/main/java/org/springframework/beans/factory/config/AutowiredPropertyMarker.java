@@ -21,6 +21,8 @@ import java.io.Serializable;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 自动装配属性的标记类，在运行时通过属性的写方法替换成相应的依赖；标记自动装配的占位符类
+ *
  * Simple marker class for an individually autowired property value, to be added
  * to {@link BeanDefinition#getPropertyValues()} for a specific bean property.
  *

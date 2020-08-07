@@ -34,6 +34,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 用于XML的ReaderContext上下文
+ *
  * Extension of {@link org.springframework.beans.factory.parsing.ReaderContext},
  * specific to use with an {@link XmlBeanDefinitionReader}. Provides access to the
  * {@link NamespaceHandlerResolver} configured in the {@link XmlBeanDefinitionReader}.

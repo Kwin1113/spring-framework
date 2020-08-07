@@ -27,6 +27,8 @@ import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 提供类合并注解的集合访问，通常注解从类或方法上获取
+ *
  * Provides access to a collection of merged annotations, usually obtained
  * from a source such as a {@link Class} or {@link Method}.
  *

@@ -36,6 +36,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * todo 管理注入元数据的内部类
+ *
  * Internal class for managing injection metadata.
  * Not intended for direct use in applications.
  *

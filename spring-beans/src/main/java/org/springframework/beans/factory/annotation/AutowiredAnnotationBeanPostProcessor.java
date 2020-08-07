@@ -69,6 +69,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 自动装配注解域、setter方法和任意配置方法的BeanPostProcessor
+ *
  * {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessor}
  * implementation that autowires annotated fields, setter methods, and arbitrary
  * config methods. Such members to be injected are detected through annotations:

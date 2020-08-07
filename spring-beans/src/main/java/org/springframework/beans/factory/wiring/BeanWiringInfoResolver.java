@@ -19,6 +19,8 @@ package org.springframework.beans.factory.wiring;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 策略接口，实现类能通过给定实例化的bean对象，解析bean名称信息；该接口的方法通过相关具体AspectJ切面中被驱动
+ *
  * Strategy interface to be implemented by objects than can resolve bean name
  * information, given a newly instantiated bean object. Invocations to the
  * {@link #resolveWiringInfo} method on this interface will be driven by

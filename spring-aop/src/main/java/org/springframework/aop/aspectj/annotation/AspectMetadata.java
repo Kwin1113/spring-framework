@@ -32,6 +32,8 @@ import org.springframework.aop.framework.AopConfigException;
 import org.springframework.aop.support.ComposablePointcut;
 
 /**
+ * TODO ApsectJ切面类的元数据
+ *
  * Metadata for an AspectJ aspect class, with an additional Spring AOP pointcut
  * for the per clause.
  *

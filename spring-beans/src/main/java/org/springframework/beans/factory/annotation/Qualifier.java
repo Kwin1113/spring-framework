@@ -24,6 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * todo 在域上或参数上使用，以限定自动装配时的候选bean
+ *
  * This annotation may be used on a field or parameter as a qualifier for
  * candidate beans when autowiring. It may also be used to annotate other
  * custom annotations that can then in turn be used as qualifiers.

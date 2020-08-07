@@ -40,6 +40,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * todo 简单的FacotryBean的模版超类，通过flag标记来创建单例或原型对象
+ *
  * Simple template superclass for {@link FactoryBean} implementations that
  * creates a singleton or a prototype object, depending on a flag.
  *

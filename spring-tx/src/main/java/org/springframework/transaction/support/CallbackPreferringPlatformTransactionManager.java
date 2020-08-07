@@ -22,6 +22,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 
 /**
+ * TODO PlatformTransactionManager的扩展接口，暴露了一个事务的回调方法
+ *
  * Extension of the {@link org.springframework.transaction.PlatformTransactionManager}
  * interface, exposing a method for executing a given callback within a transaction.
  *

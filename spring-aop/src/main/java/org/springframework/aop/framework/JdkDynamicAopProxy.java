@@ -36,6 +36,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * TODO SpringAOP框架实现的基于JDK动态代理的代理实现类
+ *
  * JDK-based {@link AopProxy} implementation for the Spring AOP framework,
  * based on JDK {@link java.lang.reflect.Proxy dynamic proxies}.
  *
@@ -118,6 +120,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating JDK dynamic proxy: " + this.advised.getTargetSource());
 		}
+		// 真正实现代理的地方
 		Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
 		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
 		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);

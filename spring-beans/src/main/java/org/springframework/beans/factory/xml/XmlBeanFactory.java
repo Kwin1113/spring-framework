@@ -22,6 +22,8 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.Resource;
 
 /**
+ * todo 从XML文件解析bean定义的DefaultListableBeanFactory扩展类；底层委托给DefaultListableBeanFactory；相当于通过DefaultListableBeanFactory来使用XmlBeanDefinitionReader
+ *
  * Convenience extension of {@link DefaultListableBeanFactory} that reads bean definitions
  * from an XML document. Delegates to {@link XmlBeanDefinitionReader} underneath; effectively
  * equivalent to using an XmlBeanDefinitionReader with a DefaultListableBeanFactory.

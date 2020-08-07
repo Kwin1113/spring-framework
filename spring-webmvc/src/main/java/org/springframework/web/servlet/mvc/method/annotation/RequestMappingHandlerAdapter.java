@@ -98,6 +98,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * TODO 支持RequestMapping注解的HandlerMethod
+ *
  * Extension of {@link AbstractHandlerMethodAdapter} that supports
  * {@link RequestMapping @RequestMapping} annotated {@link HandlerMethod HandlerMethods}.
  *
@@ -556,6 +558,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
+		// 首先初始化控制器增强行为
 		initControllerAdviceCache();
 
 		if (this.argumentResolvers == null) {
@@ -586,10 +589,12 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			// 获取Controller中@ModelAttribute的增强
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
 			}
+			// 获取Controller中@InitBinder的增强
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
@@ -767,13 +772,18 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return true;
 	}
 
+	/**
+	 * 实际请求处理
+	 */
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+		// 检查请求是否合法
 		checkRequest(request);
 
+		// 同步/非同步调用Handler方法来处理请求
 		// Execute invokeHandlerMethod in synchronized block if required.
 		if (this.synchronizeOnSession) {
 			HttpSession session = request.getSession(false);
@@ -847,24 +857,33 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
 		try {
+			// 处理@InitBinder
 			WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
+			// 处理@ModelAttribute
 			ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
 
+			// 创建一个Servlet相关的稍高级一点的HandlerMethod
 			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+			// 参数处理和返回处理  进和出
 			if (this.argumentResolvers != null) {
 				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 			}
 			if (this.returnValueHandlers != null) {
 				invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 			}
+			// 设置方法调用前的参数处理配置
 			invocableMethod.setDataBinderFactory(binderFactory);
 			invocableMethod.setParameterNameDiscoverer(this.parameterNameDiscoverer);
 
+			// 创建ModelAndView容器
 			ModelAndViewContainer mavContainer = new ModelAndViewContainer();
+			// 从请求中提取出参数设置到容器中
 			mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
+			// @ModelAttribute行为生效
 			modelFactory.initModel(webRequest, mavContainer, invocableMethod);
 			mavContainer.setIgnoreDefaultModelOnRedirect(this.ignoreDefaultModelOnRedirect);
 
+			// 创建异步请求
 			AsyncWebRequest asyncWebRequest = WebAsyncUtils.createAsyncWebRequest(request, response);
 			asyncWebRequest.setTimeout(this.asyncRequestTimeout);
 
@@ -885,11 +904,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
 
+			// 真实方法调用
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
 			}
 
+			// 提取模型视图返回
 			return getModelAndView(mavContainer, modelFactory, webRequest);
 		}
 		finally {

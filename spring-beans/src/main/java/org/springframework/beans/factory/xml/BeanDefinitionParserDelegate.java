@@ -68,6 +68,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
+ * todo 用于解析XML bean定义的有状态委托类；实现了很多解析方法
+ *
  * Stateful delegate class used to parse XML bean definitions.
  * Intended for use by both the main parser and any extension
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
@@ -229,6 +231,7 @@ public class BeanDefinitionParserDelegate {
 
 	private final XmlReaderContext readerContext;
 
+	/** 默认的文件定义，里面装着一些Bean定义的默认属性 */
 	private final DocumentDefaultsDefinition defaults = new DocumentDefaultsDefinition();
 
 	private final ParseState parseState = new ParseState();
@@ -434,6 +437,7 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		// 真正解析bean定义
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -502,27 +506,35 @@ public class BeanDefinitionParserDelegate {
 
 		this.parseState.push(new BeanEntry(beanName));
 
+		// 解析class属性
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
+		// 解析parent属性
 		String parent = null;
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
+			// 生成一个BeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
+			// 给BeanDefinition设置一些ele中加载的属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			// 解析下级标签的数据
 			parseMetaElements(ele, bd);
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			// 解析构造函数设置
 			parseConstructorArgElements(ele, bd);
+			// 解析property设置
 			parsePropertyElements(ele, bd);
+			// 解析qualifier设置
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());

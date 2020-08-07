@@ -26,6 +26,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * todo EntityResolver实现，委托给BeansDtdResolver和PluggableSchemaResolver来解析DTD和XML语法
+ *
  * {@link EntityResolver} implementation that delegates to a {@link BeansDtdResolver}
  * and a {@link PluggableSchemaResolver} for DTDs and XML schemas, respectively.
  *

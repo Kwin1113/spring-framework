@@ -19,6 +19,8 @@ package org.springframework.beans.factory.config;
 import org.springframework.beans.BeanMetadataElement;
 
 /**
+ * todo 通过抽象形式暴露bean名称的接口
+ *
  * Interface that exposes a reference to a bean name in an abstract fashion.
  * This interface does not necessarily imply a reference to an actual bean
  * instance; it just expresses a logical reference to the name of a bean.

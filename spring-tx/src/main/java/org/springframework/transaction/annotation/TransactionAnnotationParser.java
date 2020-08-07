@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
+ * TODO 解析事务注解类型的策略接口
+ *
  * Strategy interface for parsing known transaction annotation types.
  * {@link AnnotationTransactionAttributeSource} delegates to such
  * parsers for supporting specific annotation types such as Spring's own

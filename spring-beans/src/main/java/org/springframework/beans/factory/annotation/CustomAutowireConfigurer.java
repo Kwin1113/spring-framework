@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * todo 允许方便地注册自定义自动装配限定类型的BeanFacotryPostProcessor实现类
+ *
  * A {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor}
  * implementation that allows for convenient registration of custom autowire
  * qualifier types.

@@ -27,6 +27,8 @@ import org.springframework.core.annotation.AliasFor;
 import org.springframework.transaction.TransactionDefinition;
 
 /**
+ * TODO 用在类或方法上以描述事务属性
+ *
  * Describes a transaction attribute on an individual method or on a class.
  *
  * <p>At the class level, this annotation applies as a default to all methods of

@@ -20,6 +20,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo bean定义读取过程中的上下文对象，封装了所有相关的配置信息和状态
+ *
  * Context that gets passed along a bean definition reading process,
  * encapsulating all relevant configuration as well as state.
  *

@@ -23,6 +23,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 标准的XML应用上下文；通过文件系统或URL获取上下文定义文件
  * Standalone XML application context, taking the context definition files
  * from the file system or from URLs, interpreting plain paths as relative
  * file system locations (e.g. "mydir/myfile.txt"). Useful for test harnesses

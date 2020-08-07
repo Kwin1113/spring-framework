@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.xml.XmlValidationModeDetector;
 
 /**
+ * todo Spring的默认文件加载器实现类
+ *
  * Spring's default {@link DocumentLoader} implementation.
  *
  * <p>Simply loads {@link Document documents} using the standard JAXP-configured

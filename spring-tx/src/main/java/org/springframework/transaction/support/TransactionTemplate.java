@@ -31,6 +31,8 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.util.Assert;
 
 /**
+ * TODO spring事务模板类 - 简化了编程式事务和事务异常处理
+ *
  * Template class that simplifies programmatic transaction demarcation and
  * transaction exception handling.
  *

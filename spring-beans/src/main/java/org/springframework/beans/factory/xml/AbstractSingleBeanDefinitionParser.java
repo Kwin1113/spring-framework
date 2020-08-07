@@ -24,6 +24,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 该抽象bean定义解析器只解析单个的Bean定义；可用于解析自定义xml文件
+ *
  * Base class for those {@link BeanDefinitionParser} implementations that
  * need to parse and define just a <i>single</i> {@code BeanDefinition}.
  *

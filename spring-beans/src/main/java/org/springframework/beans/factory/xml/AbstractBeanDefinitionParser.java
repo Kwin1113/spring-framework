@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 抽象的Bean定义解析器，提供了一系列方便的方法和一些模版方法（需要被重写）
+ *
  * Abstract {@link BeanDefinitionParser} implementation providing
  * a number of convenience methods and a
  * {@link AbstractBeanDefinitionParser#parseInternal template method}
@@ -63,6 +65,7 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 		AbstractBeanDefinition definition = parseInternal(element, parserContext);
 		if (definition != null && !parserContext.isNested()) {
 			try {
+				// 获取配置中的 id 属性(bean名称)
 				String id = resolveId(element, definition, parserContext);
 				if (!StringUtils.hasText(id)) {
 					parserContext.getReaderContext().error(
@@ -70,16 +73,19 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 									+ "' when used as a top-level tag", element);
 				}
 				String[] aliases = null;
+				// 获取配置中的 name 属性(bean别名)
 				if (shouldParseNameAsAliases()) {
 					String name = element.getAttribute(NAME_ATTRIBUTE);
 					if (StringUtils.hasLength(name)) {
 						aliases = StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(name));
 					}
 				}
+				// 往注册中心注册bean定义
 				BeanDefinitionHolder holder = new BeanDefinitionHolder(definition, id, aliases);
 				registerBeanDefinition(holder, parserContext.getRegistry());
 				if (shouldFireEvents()) {
 					BeanComponentDefinition componentDefinition = new BeanComponentDefinition(holder);
+					// 后置执行一些操作，并将其也注册
 					postProcessComponentDefinition(componentDefinition);
 					parserContext.registerComponent(componentDefinition);
 				}
@@ -141,6 +147,8 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 
 
 	/**
+	 * todo 主要的解析方法，将Element解析成一个或多个bean定义
+	 *
 	 * Central template method to actually parse the supplied {@link Element}
 	 * into one or more {@link BeanDefinition BeanDefinitions}.
 	 * @param element the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}

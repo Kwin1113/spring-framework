@@ -21,6 +21,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 访问spring bean容器的顶层接口。bean容器的基础接口。
+ *
  * The root interface for accessing a Spring bean container.
  * This is the basic client view of a bean container;
  * further interfaces such as {@link ListableBeanFactory} and
@@ -116,6 +118,8 @@ import org.springframework.lang.Nullable;
 public interface BeanFactory {
 
 	/**
+	 * 加上这个符号表示FatoryBean这个bean对象，而不是其生成的bean对象
+	 *
 	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}

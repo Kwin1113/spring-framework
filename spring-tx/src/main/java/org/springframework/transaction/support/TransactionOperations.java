@@ -23,6 +23,8 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 
 /**
+ * TODO 指定基础事务操作的接口
+ *
  * Interface specifying basic transaction execution operations.
  * Implemented by {@link TransactionTemplate}. Not often used directly,
  * but a useful option to enhance testability, as it can easily be

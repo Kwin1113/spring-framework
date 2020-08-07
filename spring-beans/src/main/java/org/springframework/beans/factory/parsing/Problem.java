@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * todo bean定义配置的问题
+ *
  * Represents a problem with a bean definition configuration.
  * Mainly serves as common argument passed into a {@link ProblemReporter}.
  *

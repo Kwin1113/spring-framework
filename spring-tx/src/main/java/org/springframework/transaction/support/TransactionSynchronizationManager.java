@@ -33,6 +33,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * TODO 管理线程级别的资源和事务同步器
+ *
  * Central delegate that manages resources and transaction synchronizations per thread.
  * To be used by resource management code but not by typical application code.
  *

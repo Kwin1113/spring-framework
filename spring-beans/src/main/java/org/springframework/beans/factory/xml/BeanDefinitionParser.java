@@ -22,6 +22,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 用来解析xml文件中自定义顶层（在bean的下一级）标签
+ *
  * Interface used by the {@link DefaultBeanDefinitionDocumentReader} to handle custom,
  * top-level (directly under {@code <beans/>}) tags.
  *
@@ -39,6 +41,8 @@ import org.springframework.lang.Nullable;
 public interface BeanDefinitionParser {
 
 	/**
+	 * todo 解析给定的Element，并注册到给定的ParserContext中
+	 *
 	 * Parse the specified {@link Element} and register the resulting
 	 * {@link BeanDefinition BeanDefinition(s)} with the
 	 * {@link org.springframework.beans.factory.xml.ParserContext#getRegistry() BeanDefinitionRegistry}

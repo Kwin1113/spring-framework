@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 简单的NamespaceHandler实现类，直接将自定义属性映射到bean属性
+ *
  * Simple {@code NamespaceHandler} implementation that maps custom
  * attributes directly through to bean properties. An important point to note is
  * that this {@code NamespaceHandler} does not have a corresponding schema

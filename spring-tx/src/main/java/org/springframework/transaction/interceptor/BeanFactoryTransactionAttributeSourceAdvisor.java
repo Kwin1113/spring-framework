@@ -22,6 +22,8 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO TransactionAttributeSource驱动的切面增强器
+ *
  * Advisor driven by a {@link TransactionAttributeSource}, used to include
  * a transaction advice bean for methods that are transactional.
  *

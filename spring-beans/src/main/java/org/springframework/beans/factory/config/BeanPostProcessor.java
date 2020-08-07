@@ -20,6 +20,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 工厂hook，允许新bean实例的自定义修改；例如检查标记接口或通过代理包装bean
+ *
  * Factory hook that allows for custom modification of new bean instances &mdash;
  * for example, checking for marker interfaces or wrapping beans with proxies.
  *

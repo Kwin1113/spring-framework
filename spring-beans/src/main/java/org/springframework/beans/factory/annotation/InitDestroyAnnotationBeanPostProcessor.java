@@ -49,6 +49,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * todo 调用注解了init和destroy方法的BeanPostProcessor实现类；相应的init注解为PostConstruct，destroy注解为PreDestroy
+ *
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
  * that invokes annotated init and destroy methods. Allows for an annotation
  * alternative to Spring's {@link org.springframework.beans.factory.InitializingBean}

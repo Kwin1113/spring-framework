@@ -20,6 +20,8 @@ import org.springframework.beans.factory.parsing.DefaultsDefinition;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 简单的JavaBean，持有标准Spring XML bean定义文件中<beans>等级下特定的默认属性：例如默认懒加载、默认自动装配
+ *
  * Simple JavaBean that holds the defaults specified at the {@code <beans>}
  * level in a standard Spring XML bean definition document:
  * {@code default-lazy-init}, {@code default-autowire}, etc.

@@ -19,6 +19,8 @@ package org.springframework.transaction;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO 定义spring规范的事务参数
+ *
  * Interface that defines Spring-compliant transaction properties.
  * Based on the propagation behavior definitions analogous to EJB CMT attributes.
  *

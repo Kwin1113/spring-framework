@@ -21,6 +21,8 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 处理信息的策略接口
+ *
  * Strategy interface for resolving messages, with support for the parameterization
  * and internationalization of such messages.
  *

@@ -19,6 +19,8 @@ package org.springframework.transaction.support;
 import java.io.Flushable;
 
 /**
+ * TODO 事务同步回调的接口
+ *
  * Interface for transaction synchronization callbacks.
  * Supported by AbstractPlatformTransactionManager.
  *

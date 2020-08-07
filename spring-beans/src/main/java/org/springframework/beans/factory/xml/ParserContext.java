@@ -28,6 +28,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo bean定义解析过程中的上下文对象，封装来所有相关配置与状态
+ *
  * Context that gets passed along a bean definition parsing process,
  * encapsulating all relevant configuration as well as state.
  * Nested inside an {@link XmlReaderContext}.
@@ -40,6 +42,7 @@ import org.springframework.lang.Nullable;
  */
 public final class ParserContext {
 
+	// XML读取上下文
 	private final XmlReaderContext readerContext;
 
 	private final BeanDefinitionParserDelegate delegate;

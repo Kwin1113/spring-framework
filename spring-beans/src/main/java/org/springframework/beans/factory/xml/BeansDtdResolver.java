@@ -29,6 +29,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 用于从Spring class path（或JAR文件）加载DTD的实体解析器的实现类
+ *
  * {@link EntityResolver} implementation for the Spring beans DTD,
  * to load the DTD from the Spring class path (or JAR file).
  *

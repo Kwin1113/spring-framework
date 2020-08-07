@@ -39,6 +39,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 具体成熟的bean定义类的基类，将普通的属性分解成其他bean定义
+ *
  * Base class for concrete, full-fledged {@link BeanDefinition} classes,
  * factoring out common properties of {@link GenericBeanDefinition},
  * {@link RootBeanDefinition}, and {@link ChildBeanDefinition}.
@@ -598,15 +600,18 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 			// Work out whether to apply setter autowiring or constructor autowiring.
 			// If it has a no-arg constructor it's deemed to be setter autowiring,
 			// otherwise we'll try constructor autowiring.
+			// 有无参构造器就通过类型匹配
 			Constructor<?>[] constructors = getBeanClass().getConstructors();
 			for (Constructor<?> constructor : constructors) {
 				if (constructor.getParameterCount() == 0) {
 					return AUTOWIRE_BY_TYPE;
 				}
 			}
+			// 否则使用构造器匹配
 			return AUTOWIRE_CONSTRUCTOR;
 		}
 		else {
+			// 返回给定的匹配模式
 			return this.autowireMode;
 		}
 	}

@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionDefinition;
 
 /**
+ * TODO 指定了回滚场景的事务定义接口
+ *
  * This interface adds a {@code rollbackOn} specification to {@link TransactionDefinition}.
  * As custom {@code rollbackOn} is only possible with AOP, it resides in the AOP-related
  * transaction subpackage.

@@ -166,6 +166,8 @@ public abstract class BeanUtils {
 	}
 
 	/**
+	 * 通过给定构造器来实例化类的方法
+	 *
 	 * Convenience method to instantiate a class using the given constructor.
 	 * <p>Note that this method tries to set the constructor accessible if given a
 	 * non-accessible (that is, non-public) constructor, and supports Kotlin classes
@@ -180,6 +182,7 @@ public abstract class BeanUtils {
 	public static <T> T instantiateClass(Constructor<T> ctor, Object... args) throws BeanInstantiationException {
 		Assert.notNull(ctor, "Constructor must not be null");
 		try {
+			// 将构造函数通过反射工具置为public
 			ReflectionUtils.makeAccessible(ctor);
 			if (KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(ctor.getDeclaringClass())) {
 				return KotlinDelegate.instantiateClass(ctor, args);
@@ -188,6 +191,7 @@ public abstract class BeanUtils {
 				Class<?>[] parameterTypes = ctor.getParameterTypes();
 				Assert.isTrue(args.length <= parameterTypes.length, "Can't specify more arguments than constructor parameters");
 				Object[] argsWithDefaultValues = new Object[args.length];
+				// 将给定args参数与构造器的参数给定默认值一一匹配
 				for (int i = 0 ; i < args.length; i++) {
 					if (args[i] == null) {
 						Class<?> parameterType = parameterTypes[i];

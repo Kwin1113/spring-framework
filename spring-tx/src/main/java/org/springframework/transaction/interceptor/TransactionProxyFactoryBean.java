@@ -30,6 +30,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
+ * TODO 处理声明式事务的代理工厂bean
+ *
  * Proxy factory bean for simplified declarative transaction handling.
  * This is a convenient alternative to a standard AOP
  * {@link org.springframework.aop.framework.ProxyFactoryBean}

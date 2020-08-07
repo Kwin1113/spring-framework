@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO MVC框架SPI，使核心MVC工作流参数化
+ *
  * MVC framework SPI, allowing parameterization of the core MVC workflow.
  *
  * <p>Interface that must be implemented for each handler type to handle a request.

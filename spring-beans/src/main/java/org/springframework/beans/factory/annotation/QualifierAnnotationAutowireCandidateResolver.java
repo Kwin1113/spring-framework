@@ -43,6 +43,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 通过域或参数上的Qualifier注解来指定自动装配时的bean定义的AutowireCandidateResolver
+ *
  * {@link AutowireCandidateResolver} implementation that matches bean definition qualifiers
  * against {@link Qualifier qualifier annotations} on the field or parameter to be autowired.
  * Also supports suggested expression values through a {@link Value value} annotation.

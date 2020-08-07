@@ -26,6 +26,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 在解析的元素中存在属性名称一对一的mapping或类属性名称已配置好的情况下的方便基类（例子见下面example）。
+ *
  * Convenient base class for when there exists a one-to-one mapping
  * between attribute names on the element that is to be parsed and
  * the property names on the {@link Class} being configured.

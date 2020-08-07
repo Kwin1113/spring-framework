@@ -154,13 +154,16 @@ public abstract class AbstractController extends WebContentGenerator implements 
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
+		// 预检请求返回允许的请求头配置
 		if (HttpMethod.OPTIONS.matches(request.getMethod())) {
 			response.setHeader("Allow", getAllowHeader());
 			return null;
 		}
 
 		// Delegate to WebContentGenerator for checking and preparing.
+		// 检查请求
 		checkRequest(request);
+		// 配置响应
 		prepareResponse(response);
 
 		// Execute handleRequestInternal in synchronized block if required.

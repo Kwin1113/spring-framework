@@ -35,6 +35,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * todo 通过一系列mapping文件将schema URL解析成classpath资源
+ *
  * {@link EntityResolver} implementation that attempts to resolve schema URLs into
  * local {@link ClassPathResource classpath resources} using a set of mappings files.
  *

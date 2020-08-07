@@ -17,6 +17,8 @@
 package org.springframework.core;
 
 /**
+ * todo 管理别名alias的通用接口
+ *
  * Common interface for managing aliases. Serves as super-interface for
  * {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}.
  *

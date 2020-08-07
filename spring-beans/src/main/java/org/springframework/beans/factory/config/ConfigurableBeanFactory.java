@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
 /**
+ * todo 大多数bean工厂实现的配置接口；除了BeanFactory接口方法外，还提供一些配置方法
+ *
  * Configuration interface to be implemented by most bean factories. Provides
  * facilities to configure a bean factory, in addition to the bean factory
  * client methods in the {@link org.springframework.beans.factory.BeanFactory}

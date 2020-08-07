@@ -21,6 +21,8 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 为特定依赖限定自动装配候选bean的策略接口
+ *
  * Strategy interface for determining whether a specific bean definition
  * qualifies as an autowire candidate for a specific dependency.
  *

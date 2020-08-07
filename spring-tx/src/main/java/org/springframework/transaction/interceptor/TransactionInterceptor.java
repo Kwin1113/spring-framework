@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
+ * TODO AOP方法拦截器，用于使用通用Spring事务结构的声明式事务管理
+ *
  * AOP Alliance MethodInterceptor for declarative transaction
  * management using the common Spring transaction infrastructure
  * ({@link org.springframework.transaction.PlatformTransactionManager}/

@@ -66,6 +66,8 @@ import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * TODO Http请求处理器/控制器的中心分发器
+ *
  * Central dispatcher for HTTP request handlers/controllers, e.g. for web UI controllers
  * or HTTP-based remote service exporters. Dispatches to registered handlers for processing
  * a web request, providing convenient mapping and exception handling facilities.
@@ -492,6 +494,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+		// 初始化Servlet Bean使加载所有配置
 		initStrategies(context);
 	}
 
@@ -912,6 +915,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
+		// 将请求中的参数做快照
 		Map<String, Object> attributesSnapshot = null;
 		if (WebUtils.isIncludeRequest(request)) {
 			attributesSnapshot = new HashMap<>();
@@ -924,6 +928,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		// 将一系列参数赋予request，在请求进行传递的过程中可以使用
 		// Make framework objects available to handlers and view objects.
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
@@ -940,6 +945,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
+			// 将请求实际分发给响应的Handler
 			doDispatch(request, response);
 		}
 		finally {
@@ -987,6 +993,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+	 * TODO 将请求实际分发给Handler。所有方法都可以被处理，具体能不能完成取决于Handler实现
+	 *
 	 * Process the actual dispatching to the handler.
 	 * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
 	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
@@ -998,6 +1006,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @throws Exception in case of any kind of processing failure
 	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 重新声明一个Request变量，因为后续可能会通过request经过处理之后赋一个新的 例如multipartRequest
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false;
@@ -1009,17 +1018,22 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				// 如果是MultipartRequest，则将请求处理成MultipartHttpServletRequest
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
+				// 获取到该请求对应的处理器执行调用链
 				// Determine handler for the current request.
 				mappedHandler = getHandler(processedRequest);
+
+				// 没找到对应的Handler，返回"熟悉的"信息，例如 No mapping for GET /test
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+				// 在已注册的HandlerAdapter适配器中找到支持该Handler的适配器，后续通过适配器进行调用
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1032,10 +1046,12 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				// 开始应用调用链中的拦截器，只要有一个拦截器返回false，则拒绝该请求，同时触发afterCompletion（逆序调用）
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
+				// Handler的真正调用
 				// Actually invoke the handler.
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
@@ -1044,6 +1060,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+				// 调用拦截器的postHandle
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1054,8 +1071,13 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+			// 处理返回结果
+			// 异常则返回异常视图
+			// 正常则尝试渲染给定的mv视图
+			// 并调用拦截器的afterCompletion
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
+		// 无论如何会触发到afterCompletion
 		catch (Exception ex) {
 			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
 		}
@@ -1101,6 +1123,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		boolean errorView = false;
 
+		// 有异常则返回异常视图
 		if (exception != null) {
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
@@ -1113,6 +1136,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		// 渲染ModelAndView
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
 			render(mv, request, response);
@@ -1131,6 +1155,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			return;
 		}
 
+		// 调用afterCompletion
 		if (mappedHandler != null) {
 			// Exception (if any) is already handled..
 			mappedHandler.triggerAfterCompletion(request, response, null);

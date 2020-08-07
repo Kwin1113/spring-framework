@@ -30,6 +30,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * TODO 处理器执行链  执行流程：  链式调用拦截器的PreHandle -> Handler执行调用 -> 链式调用拦截器的PostHandle -> 请求返回 -> 链式调用拦截器的afterCompletion
+ *
  * Handler execution chain, consisting of handler object and any handler interceptors.
  * Returned by HandlerMapping's {@link HandlerMapping#getHandler} method.
  *
@@ -128,6 +130,7 @@ public class HandlerExecutionChain {
 
 
 	/**
+	 * TODO 链式调用拦截器的preHandle
 	 * Apply preHandle methods of registered interceptors.
 	 * @return {@code true} if the execution chain should proceed with the
 	 * next interceptor or the handler itself. Else, DispatcherServlet assumes
@@ -138,6 +141,7 @@ public class HandlerExecutionChain {
 		if (!ObjectUtils.isEmpty(interceptors)) {
 			for (int i = 0; i < interceptors.length; i++) {
 				HandlerInterceptor interceptor = interceptors[i];
+				// 如果被拦截下来，则直接跳过postHandle执行afterCompletion（从该拦截器之前开始逆序调用）
 				if (!interceptor.preHandle(request, response, this.handler)) {
 					triggerAfterCompletion(request, response, null);
 					return false;

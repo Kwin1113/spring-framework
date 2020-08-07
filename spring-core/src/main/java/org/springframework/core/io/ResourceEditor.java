@@ -26,6 +26,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo 资源标识符的编辑器，将String类型的位置信息转换成Resource属性
+ *
  * {@link java.beans.PropertyEditor Editor} for {@link Resource}
  * descriptors, to automatically convert {@code String} locations
  * e.g. {@code file:C:/myfile.txt} or {@code classpath:myfile.txt} to

@@ -31,6 +31,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 尝试通过ResourceLoader解析实体引用
+ *
  * {@code EntityResolver} implementation that tries to resolve entity references
  * through a {@link org.springframework.core.io.ResourceLoader} (usually,
  * relative to the resource base of an {@code ApplicationContext}), if applicable.

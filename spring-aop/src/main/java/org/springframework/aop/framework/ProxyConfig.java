@@ -21,6 +21,8 @@ import java.io.Serializable;
 import org.springframework.util.Assert;
 
 /**
+ * TODO 创建代理的配置超类，包含一些通用属性
+ *
  * Convenience superclass for configuration used in creating proxies,
  * to ensure that all proxy creators have consistent properties.
  *

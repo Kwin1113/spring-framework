@@ -23,6 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * todo 使用在域或方法/构造器参数上的注解，指定对应参数的默认value表达式；表达式依赖注入；支持方法参数的动态解析
+ *
  * Annotation at the field or method/constructor parameter level
  * that indicates a default value expression for the affected argument.
  *

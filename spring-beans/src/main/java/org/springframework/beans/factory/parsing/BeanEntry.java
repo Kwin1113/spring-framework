@@ -17,6 +17,8 @@
 package org.springframework.beans.factory.parsing;
 
 /**
+ * todo 代表bean定义的解析状态entry
+ *
  * {@link ParseState} entry representing a bean definition.
  *
  * @author Rob Harrop

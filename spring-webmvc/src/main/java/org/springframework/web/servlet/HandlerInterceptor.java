@@ -23,6 +23,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.method.HandlerMethod;
 
 /**
+ * TODO 自定义处理器执行链工作流，在执行Handler之前/后进行行为预处理，不影响handler行为
+ *
  * Workflow interface that allows for customized handler execution chains.
  * Applications can register any number of existing or custom interceptors
  * for certain groups of handlers, to add common preprocessing behavior

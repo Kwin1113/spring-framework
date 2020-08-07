@@ -17,6 +17,8 @@
 package org.springframework.beans.factory.config;
 
 /**
+ * todo 自定义给定bean定义的回调
+ *
  * Callback for customizing a given bean definition.
  * Designed for use with a lambda expression or method reference.
  *

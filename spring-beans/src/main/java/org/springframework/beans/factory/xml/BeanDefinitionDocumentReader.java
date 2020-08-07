@@ -21,6 +21,8 @@ import org.w3c.dom.Document;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 
 /**
+ * todo 用于解析包含Spring bean定义的XML文件；由XmlBeanDefinitionReader使用来解析一个DOM文件。
+ *
  * SPI for parsing an XML document that contains Spring bean definitions.
  * Used by {@link XmlBeanDefinitionReader} for actually parsing a DOM document.
  *

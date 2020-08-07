@@ -55,6 +55,8 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
 /**
+ * TODO 从类型和Controller中方法级别RequestMapping注解上创建一个RequestMappingInfo实例
+ *
  * Creates {@link RequestMappingInfo} instances from type and method-level
  * {@link RequestMapping @RequestMapping} annotations in
  * {@link Controller @Controller} classes.
@@ -224,6 +226,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	@Override
 	@Nullable
 	protected RequestMappingInfo getMappingForMethod(Method method, Class<?> handlerType) {
+		// 从RequestMapping中获取配置生成RequestMappingInfo
 		RequestMappingInfo info = createRequestMappingInfo(method);
 		if (info != null) {
 			RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType);
@@ -376,6 +379,9 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 		return new RequestMatchResult(patterns.iterator().next(), lookupPath, getPathMatcher());
 	}
 
+	/**
+	 * 初始化跨域配置
+	 */
 	@Override
 	protected CorsConfiguration initCorsConfiguration(Object handler, Method method, RequestMappingInfo mappingInfo) {
 		HandlerMethod handlerMethod = createHandlerMethod(handler, method);

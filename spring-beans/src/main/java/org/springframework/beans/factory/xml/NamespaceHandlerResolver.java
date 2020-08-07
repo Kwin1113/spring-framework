@@ -19,6 +19,8 @@ package org.springframework.beans.factory.xml;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo DefaultBeanDefinitionDocumentReader用于通过特定的命名空间URI来寻找合适的NamespaceHandler实现类
+ *
  * Used by the {@link org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader} to
  * locate a {@link NamespaceHandler} implementation for a particular namespace URI.
  *

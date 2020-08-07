@@ -19,6 +19,7 @@ package org.springframework.aop.framework;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO AOP代理接口，具体实现委托给子类（CGLib/JDK）
  * Delegate interface for a configured AOP proxy, allowing for the creation
  * of actual proxy objects.
  *

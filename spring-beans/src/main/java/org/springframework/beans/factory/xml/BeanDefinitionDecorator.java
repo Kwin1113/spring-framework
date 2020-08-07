@@ -21,6 +21,8 @@ import org.w3c.dom.Node;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 
 /**
+ * todo DefaultBeanDefinitionDocumentReader用于处理自定义嵌套（直接在bean下）的标签的接口
+ *
  * Interface used by the {@link DefaultBeanDefinitionDocumentReader}
  * to handle custom, nested (directly under a {@code <bean>}) tags.
  *

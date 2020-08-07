@@ -52,6 +52,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 
 	private final Set<ProtocolResolver> protocolResolvers = new LinkedHashSet<>(4);
 
+	/** 通过Map保存加载的资源 */
 	private final Map<Class<?>, Map<Resource, ?>> resourceCaches = new ConcurrentHashMap<>(4);
 
 

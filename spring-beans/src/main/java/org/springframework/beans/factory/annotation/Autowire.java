@@ -19,6 +19,8 @@ package org.springframework.beans.factory.annotation;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 /**
+ * todo 决定自动装配状态的枚举类：即bean是否应该由Spring容器使用setter注入自动注入依赖
+ *
  * Enumeration determining autowiring status: that is, whether a bean should
  * have its dependencies automatically injected by the Spring container using
  * setter injection. This is a core concept in Spring DI.

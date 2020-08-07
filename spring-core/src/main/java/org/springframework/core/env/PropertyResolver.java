@@ -19,6 +19,8 @@ package org.springframework.core.env;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 通过底层资源解析属性的接口
+ *
  * Interface for resolving properties against any underlying source.
  *
  * @author Chris Beams

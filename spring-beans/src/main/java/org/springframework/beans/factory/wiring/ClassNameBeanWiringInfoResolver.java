@@ -20,6 +20,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * todo BeanWiringInfoResolver接口的简单默认实现，使用全限定类名查找bean
+ *
  * Simple default implementation of the {@link BeanWiringInfoResolver} interface,
  * looking for a bean with the same name as the fully-qualified class name.
  * This matches the default name of the bean in a Spring XML file if the

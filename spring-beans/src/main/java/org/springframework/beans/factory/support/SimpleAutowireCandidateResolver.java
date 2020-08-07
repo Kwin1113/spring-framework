@@ -21,6 +21,7 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 不允许注解支持时使用的AutowireCandidateResolver实现类；只检查bean定义
  * {@link AutowireCandidateResolver} implementation to use when no annotation
  * support is available. This implementation checks the bean definition only.
  *

@@ -22,6 +22,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo bean定义读取器的简单接口。
  * Simple interface for bean definition readers.
  * Specifies load methods with Resource and String location parameters.
  *

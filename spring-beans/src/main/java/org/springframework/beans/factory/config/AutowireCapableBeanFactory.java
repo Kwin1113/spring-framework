@@ -26,6 +26,8 @@ import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo BeanFactory接口的扩展，实现类为允许自动装配的bean工厂，需要暴露该功能给已有的bean实例；用于其他框架接入
+ *
  * Extension of the {@link org.springframework.beans.factory.BeanFactory}
  * interface to be implemented by bean factories that are capable of
  * autowiring, provided that they want to expose this functionality for

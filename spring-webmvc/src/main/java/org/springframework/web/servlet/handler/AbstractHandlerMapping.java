@@ -49,6 +49,8 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 
 /**
+ * TODO HandlerMapping的抽象基类，能获取应用上下文容器、拦截器等信息
+ *
  * Abstract base class for {@link org.springframework.web.servlet.HandlerMapping}
  * implementations. Supports ordering, a default handler, handler interceptors,
  * including handler interceptors mapped by path patterns.
@@ -390,19 +392,23 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		// 从注册中心中取到最合适的HandlerMethod
 		Object handler = getHandlerInternal(request);
+		// 没有精确的匹配 找默认匹配 例如"/*"
 		if (handler == null) {
 			handler = getDefaultHandler();
 		}
 		if (handler == null) {
 			return null;
 		}
+		// 如果是BeanName，则实例化获取可执行的HandlerMethod
 		// Bean name or resolved handler?
 		if (handler instanceof String) {
 			String handlerName = (String) handler;
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
 
+		// 通过Handler和request请求获取到对应的HandlerExecutionChain调用链
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 
 		if (logger.isTraceEnabled()) {
@@ -412,6 +418,9 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			logger.debug("Mapped to " + executionChain.getHandler());
 		}
 
+		// 如果存在跨域配置
+		// 如果是预检请求，则重新封装成预检Handler返回
+		// 如果是普通请求，则在拦截器链头部加上跨域配置拦截器
 		if (hasCorsConfigurationSource(handler)) {
 			CorsConfiguration config = (this.corsConfigurationSource != null ? this.corsConfigurationSource.getCorsConfiguration(request) : null);
 			CorsConfiguration handlerConfig = getCorsConfiguration(handler, request);
@@ -462,9 +471,11 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @see #getAdaptedInterceptors()
 	 */
 	protected HandlerExecutionChain getHandlerExecutionChain(Object handler, HttpServletRequest request) {
+		// 如果Handler的类型就是调用链，直接强转返回就行；否则作为调用链中的Handler
 		HandlerExecutionChain chain = (handler instanceof HandlerExecutionChain ?
 				(HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
 
+		// 从request中获取路径，根据路径拿到匹配该路径的所有拦截器
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request, LOOKUP_PATH);
 		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
 			if (interceptor instanceof MappedInterceptor) {

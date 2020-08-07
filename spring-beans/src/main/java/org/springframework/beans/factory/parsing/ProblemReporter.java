@@ -17,6 +17,8 @@
 package org.springframework.beans.factory.parsing;
 
 /**
+ * todo SPI接口，允许在bean定义解析过程中通过工具或其他外部进程来解决错误和报警
+ *
  * SPI interface allowing tools and other external processes to handle errors
  * and warnings reported during bean definition parsing.
  *

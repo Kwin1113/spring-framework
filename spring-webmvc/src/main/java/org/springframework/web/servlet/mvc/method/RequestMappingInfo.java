@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.util.UrlPathHelper;
 
 /**
+ * TODO 请求映射信息 封装了很多RequestCondition
  * Request mapping information. Encapsulates the following request mapping conditions:
  * <ol>
  * <li>{@link PatternsRequestCondition}

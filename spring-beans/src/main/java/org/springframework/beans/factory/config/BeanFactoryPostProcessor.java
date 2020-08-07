@@ -19,6 +19,7 @@ package org.springframework.beans.factory.config;
 import org.springframework.beans.BeansException;
 
 /**
+ * todo 工厂hook，允许自定义修改应用上下文中的bean定义
  * Factory hook that allows for custom modification of an application context's
  * bean definitions, adapting the bean property values of the context's underlying
  * bean factory.

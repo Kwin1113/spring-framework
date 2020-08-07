@@ -19,6 +19,8 @@ package org.springframework.beans.factory;
 import org.springframework.beans.BeansException;
 
 /**
+ * todo 返回对象实例的工厂
+ *
  * Defines a factory which can return an Object instance
  * (possibly shared or independent) when invoked.
  *

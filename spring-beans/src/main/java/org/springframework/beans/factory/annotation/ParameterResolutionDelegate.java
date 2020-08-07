@@ -33,6 +33,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * todo 解析外部管理构造器和方法的可自动装配参数的公共委托器
+ *
  * Public delegate for resolving autowirable parameters on externally managed
  * constructors and methods.
  *

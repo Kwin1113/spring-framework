@@ -19,6 +19,8 @@ package org.springframework.core;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 定义类从任意对象添加或访问属性的通用协议
+ *
  * Interface defining a generic contract for attaching and accessing metadata
  * to/from arbitrary objects.
  *

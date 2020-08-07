@@ -34,6 +34,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.StringUtils;
 
 /**
+ * todo util命名空间的NamespaceHandler
+ *
  * {@link NamespaceHandler} for the {@code util} namespace.
  *
  * @author Rob Harrop

@@ -27,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.WebContentGenerator;
 
 /**
+ * TODO HandlerAdapter的抽象实现类，支持以HandlerMethod为Handler
+ *
  * Abstract base class for {@link HandlerAdapter} implementations that support
  * handlers of type {@link HandlerMethod}.
  *
@@ -83,7 +85,7 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 	@Nullable
 	public final ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-
+		// 内部实现值允许HandlerMethod作为Handler
 		return handleInternal(request, response, (HandlerMethod) handler);
 	}
 

@@ -21,6 +21,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * TODO 处理HandlerMethod返回结果的策略接口
+ *
  * Strategy interface to handle the value returned from the invocation of a
  * handler method .
  *

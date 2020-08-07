@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO 用来定义请求与handler之间映射关系的接口
+ *
  * Interface to be implemented by objects that define a mapping between
  * requests and handler objects.
  *

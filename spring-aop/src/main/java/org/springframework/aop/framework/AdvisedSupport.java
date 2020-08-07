@@ -43,6 +43,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * TODO AOP代理配置管理的基类；只是持有一些增强的属性，具体实现委托给子类
+ *
  * Base class for AOP proxy configuration managers.
  * These are not themselves AOP proxies, but subclasses of this class are
  * normally factories from which AOP proxy instances are obtained directly.

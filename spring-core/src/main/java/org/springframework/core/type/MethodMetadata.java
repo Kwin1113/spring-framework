@@ -17,6 +17,8 @@
 package org.springframework.core.type;
 
 /**
+ * todo 定义类访问特定类的注解的抽象方法，不需要加载类
+ *
  * Interface that defines abstract access to the annotations of a specific
  * class, in a form that does not require that class to be loaded yet.
  *

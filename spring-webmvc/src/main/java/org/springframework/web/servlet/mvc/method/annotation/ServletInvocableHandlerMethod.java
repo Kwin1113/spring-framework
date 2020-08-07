@@ -46,6 +46,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.util.NestedServletException;
 
 /**
+ * TODO InvocableHandlerMethod的扩展接口，以支持通过策略接口控制返回值行为和基于方法级别的@ResponseStatus注解控制响应状态码的行为
+ *
  * Extends {@link InvocableHandlerMethod} with the ability to handle return
  * values through a registered {@link HandlerMethodReturnValueHandler} and
  * also supports setting the response status based on a method-level
@@ -103,6 +105,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		// 通过反射进行方法调用
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
 		setResponseStatus(webRequest);
 

@@ -23,6 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * todo 指示'lookup'方法的注解，以使容器将其重定向回BeanFactory来调用getBean；可以通过该注解来解决类似单例bean依赖原型bean的场景，即每次都去寻找'lookup'而不是一开始就注入
+ *
  * An annotation that indicates 'lookup' methods, to be overridden by the container
  * to redirect them back to the {@link org.springframework.beans.factory.BeanFactory}
  * for a {@code getBean} call. This is essentially an annotation-based version of the

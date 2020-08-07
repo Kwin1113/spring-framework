@@ -17,6 +17,8 @@
 package org.springframework.aop;
 
 /**
+ * TODO 用于判断对象是否为spring生成的代理的标记接口
+ *
  * Marker interface implemented by all AOP proxies. Used to detect
  * whether or not objects are Spring-generated proxies.
  *

@@ -22,6 +22,8 @@ import org.springframework.core.type.MethodMetadata;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo bean定义的拓展接口，暴露bean类的注解元数据，不需要加载类
+ *
  * Extended {@link org.springframework.beans.factory.config.BeanDefinition}
  * interface that exposes {@link org.springframework.core.type.AnnotationMetadata}
  * about its bean class - without requiring the class to be loaded yet.

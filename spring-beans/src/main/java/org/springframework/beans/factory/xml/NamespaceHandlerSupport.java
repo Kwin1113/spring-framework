@@ -28,6 +28,8 @@ import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 实现自定义NamespaceHandler的支持类
+ *
  * Support class for implementing custom {@link NamespaceHandler NamespaceHandlers}.
  * Parsing and decorating of individual {@link Node Nodes} is done via {@link BeanDefinitionParser}
  * and {@link BeanDefinitionDecorator} strategy interfaces, respectively.

@@ -27,6 +27,8 @@ import java.nio.channels.ReadableByteChannel;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 从底层资源的实际类型抽象的资源标识符接口，例如从文件或class path资源中
+ *
  * Interface for a resource descriptor that abstracts from the actual
  * type of underlying resource, such as a file or class path resource.
  *

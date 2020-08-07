@@ -164,10 +164,12 @@ public class UrlPathHelper {
 	 * @see #getPathWithinApplication
 	 */
 	public String getLookupPathForRequest(HttpServletRequest request) {
+		// 设置了使用绝对路径
 		// Always use full path within current servlet context?
 		if (this.alwaysUseFullPath) {
 			return getPathWithinApplication(request);
 		}
+		// 否则使用相对路径
 		// Else, use path within current servlet mapping if applicable
 		String rest = getPathWithinServletMapping(request);
 		if (!"".equals(rest)) {

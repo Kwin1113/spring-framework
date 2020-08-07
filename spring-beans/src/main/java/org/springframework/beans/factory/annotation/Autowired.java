@@ -23,6 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * todo 标记构造器、域、setter方法、或配置方法，以通过Spring的依赖注入功能自动装配
+ *
  * Marks a constructor, field, setter method, or config method as to be autowired by
  * Spring's dependency injection facilities. This is an alternative to the JSR-330
  * {@link javax.inject.Inject} annotation, adding required-vs-optional semantics.

@@ -19,6 +19,8 @@ package org.springframework.core.type;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 定义了特定类的抽象元数据，不需要加载类
+ *
  * Interface that defines abstract metadata of a specific class,
  * in a form that does not require that class to be loaded yet.
  *

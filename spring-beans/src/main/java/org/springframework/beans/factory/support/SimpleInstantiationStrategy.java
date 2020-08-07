@@ -63,7 +63,9 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		if (!bd.hasMethodOverrides()) {
 			Constructor<?> constructorToUse;
 			synchronized (bd.constructorArgumentLock) {
+				// 查找RootBeanDefinition中的构造函数或工厂方法
 				constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
+				// 如果没有则获取该bean对应class的构造器
 				if (constructorToUse == null) {
 					final Class<?> clazz = bd.getBeanClass();
 					if (clazz.isInterface()) {
@@ -84,6 +86,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			// 使用BeanUtils通过构造行数初始化
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {

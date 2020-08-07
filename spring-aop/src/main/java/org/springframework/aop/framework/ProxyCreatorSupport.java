@@ -22,6 +22,7 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
+ * TODO 代理工厂基类；持有AopProxyFacotry
  * Base class for proxy factories.
  * Provides convenient access to a configurable AopProxyFactory.
  *

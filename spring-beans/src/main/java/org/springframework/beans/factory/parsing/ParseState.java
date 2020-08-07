@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 通过LinkedList结构实现的简单类，以在解析过程中追踪逻辑位置。
+ *
  * Simple {@link LinkedList}-based structure for tracking the logical position during
  * a parsing process. {@link Entry entries} are added to the LinkedList at
  * each point during the parse phase in a reader-specific manner.

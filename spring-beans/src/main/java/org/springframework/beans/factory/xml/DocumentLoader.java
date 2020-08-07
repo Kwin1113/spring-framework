@@ -22,6 +22,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 
 /**
+ * todo 加载XML文件的策略接口
+ *
  * Strategy interface for loading an XML {@link Document}.
  *
  * @author Rob Harrop

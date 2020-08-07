@@ -87,6 +87,8 @@ public abstract class DataSourceUtils {
 	}
 
 	/**
+	 * TODO 从给定数据源中获取实际JDBC连接的方法
+	 *
 	 * Actually obtain a JDBC Connection from the given DataSource.
 	 * Same as {@link #getConnection}, but throwing the original SQLException.
 	 * <p>Is aware of a corresponding Connection bound to the current thread, for example
@@ -101,6 +103,7 @@ public abstract class DataSourceUtils {
 	public static Connection doGetConnection(DataSource dataSource) throws SQLException {
 		Assert.notNull(dataSource, "No DataSource specified");
 
+		// 先尝试获取线程对应的连接信息 | 如果存在则表示之前该事务被暂停
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 		if (conHolder != null && (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
 			conHolder.requested();
@@ -115,6 +118,7 @@ public abstract class DataSourceUtils {
 		logger.debug("Fetching JDBC Connection from DataSource");
 		Connection con = fetchConnection(dataSource);
 
+		// 注册对应的TransactionSynchronization
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			try {
 				// Use same Connection for further JDBC actions within the transaction.
@@ -145,6 +149,8 @@ public abstract class DataSourceUtils {
 	}
 
 	/**
+	 * TODO 真正从DataSource获取Connection的地方
+	 *
 	 * Actually fetch a {@link Connection} from the given {@link DataSource},
 	 * defensively turning an unexpected {@code null} return value from
 	 * {@link DataSource#getConnection()} into an {@link IllegalStateException}.
@@ -179,6 +185,7 @@ public abstract class DataSourceUtils {
 		Assert.notNull(con, "No Connection specified");
 
 		// Set read-only flag.
+		// 设置只读标记 MySQL Oracle PgSQL支持
 		if (definition != null && definition.isReadOnly()) {
 			try {
 				if (logger.isDebugEnabled()) {
@@ -200,6 +207,7 @@ public abstract class DataSourceUtils {
 			}
 		}
 
+		// 获取指定隔离级别
 		// Apply specific isolation level, if any.
 		Integer previousIsolationLevel = null;
 		if (definition != null && definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {
@@ -207,7 +215,9 @@ public abstract class DataSourceUtils {
 				logger.debug("Changing isolation level of JDBC Connection [" + con + "] to " +
 						definition.getIsolationLevel());
 			}
+			// 连接对应的隔离等级
 			int currentIsolation = con.getTransactionIsolation();
+			// 使用用户指定的隔离等级
 			if (currentIsolation != definition.getIsolationLevel()) {
 				previousIsolationLevel = currentIsolation;
 				con.setTransactionIsolation(definition.getIsolationLevel());

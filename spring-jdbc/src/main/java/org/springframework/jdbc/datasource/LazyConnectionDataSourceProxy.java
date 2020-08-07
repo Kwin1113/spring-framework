@@ -33,6 +33,8 @@ import org.springframework.core.Constants;
 import org.springframework.lang.Nullable;
 
 /**
+ * TODO 目标数据源代理类，延迟获取实际JDBC练级
+ *
  * Proxy for a target DataSource, fetching actual JDBC Connections lazily,
  * i.e. not until first creation of a Statement. Connection initialization
  * properties like auto-commit mode, transaction isolation and read-only mode

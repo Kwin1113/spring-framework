@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
 /**
+ * todo 定义类AnnotationMetadata（类）或MethodMetadata（方法）上注解的方法，而不需要加载类class-loading
+ *
  * Defines access to the annotations of a specific type ({@link AnnotationMetadata class}
  * or {@link MethodMetadata method}), in a form that does not necessarily require the
  * class-loading.

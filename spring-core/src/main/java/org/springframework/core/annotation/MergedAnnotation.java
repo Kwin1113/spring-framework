@@ -33,6 +33,8 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo 单个合并注解
+ *
  * A single merged annotation returned from a {@link MergedAnnotations}
  * collection. Presents a view onto an annotation where attribute values may
  * have been "merged" from different source values.
@@ -68,6 +70,8 @@ public interface MergedAnnotation<A extends Annotation> {
 
 
 	/**
+	 * todo 实际的注解类型
+	 *
 	 * Get the {@code Class} reference for the actual annotation type.
 	 * @return the annotation type
 	 */

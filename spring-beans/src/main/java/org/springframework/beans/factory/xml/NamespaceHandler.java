@@ -24,6 +24,8 @@ import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.lang.Nullable;
 
 /**
+ * todo DefaultBeanDefinitionDocumentReader用于处理Spring XML配置文件中的自定义命名空间的基础接口
+ *
  * Base interface used by the {@link DefaultBeanDefinitionDocumentReader}
  * for handling custom namespaces in a Spring XML configuration file.
  *
